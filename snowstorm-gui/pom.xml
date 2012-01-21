@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>net.snowstorm</groupId>
+        <artifactId>snowstorm</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.snowstorm</groupId>
+    <artifactId>snowstorm-gui</artifactId>
+    <version>${snowstorm.gui.version}</version>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin</artifactId>
+            <version>6.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.snowstorm</groupId>
+            <artifactId>snowstorm-core</artifactId>
+            <version>${snowstorm.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.snowstorm</groupId>
+            <artifactId>snowstorm-wow</artifactId>
+            <version>${snowstorm.wow.version}</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <finalName>snowstorm-gui</finalName>
+        <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.cargo</groupId>-->
+                <!--<artifactId>cargo-maven2-plugin</artifactId>-->
+                <!--&lt;!&ndash;<version>1.0</version>&ndash;&gt;-->
+                <!--<configuration>-->
+                    <!--<wait>false</wait>-->
+                    <!--<container>-->
+                        <!--<containerId>tomcat6x</containerId>-->
+                        <!--<zipUrlInstaller>-->
+                            <!--<url>-->
+                                <!--http://www.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.zip-->
+                            <!--</url>-->
+                            <!--<downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>-->
+                            <!--&lt;!&ndash;<extractDir>${project.build.directory}</extractDir>&ndash;&gt;-->
+                        <!--</zipUrlInstaller>-->
+                    <!--</container>-->
+                    <!--<configuration>-->
+                        <!--<home>-->
+                            <!--${project.build.directory}/tomcat6x/container-->
+                        <!--</home>-->
+                    <!--</configuration>-->
+                <!--</configuration>-->
+                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<container>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<containerId>tomcat6x</containerId>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<home>/usr/local/apache-tomcat-6.0.18</home>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</container>&ndash;&gt;-->
+                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+            <!--</plugin>-->
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.10</version>
+                <configuration>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <!--<stopPort>9966</stopPort>-->
+                    <!--<stopKey>foo</stopKey>-->
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

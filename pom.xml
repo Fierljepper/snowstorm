@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.snowstorm</groupId>
+    <artifactId>snowstorm</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <snowstorm.core.version>0.0.1-SNAPSHOT</snowstorm.core.version>
+        <snowstorm.wow.version>0.0.1-SNAPSHOT</snowstorm.wow.version>
+        <snowstorm.gui.version>0.0.1-SNAPSHOT</snowstorm.gui.version>
+    </properties>
+
+    <modules>
+        <module>snowstorm-core</module>
+        <module>snowstorm-gui</module>
+        <module>snowstorm-wow</module>
+    </modules>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-rebel-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.cargo</groupId>-->
+                <!--<artifactId>cargo-maven2-plugin</artifactId>-->
+                <!--<version>1.1.4</version>-->
+                <!--<configuration>-->
+
+                    <!--&lt;!&ndash;<wait>false</wait>&ndash;&gt;-->
+                    <!--<container>-->
+                        <!--<containerId>tomcat6x</containerId>-->
+                        <!--<zipUrlInstaller>-->
+                            <!--<url>-->
+                                <!--http://www.apache.org/dist/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.zip-->
+                            <!--</url>-->
+                            <!--&lt;!&ndash;<extractDir>${project.build.directory}</extractDir>&ndash;&gt;-->
+                            <!--<downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>-->
+                        <!--</zipUrlInstaller>-->
+                    <!--</container>-->
+
+                    <!--<configuration>-->
+                        <!--<deployables>-->
+                            <!--<deployable>-->
+                                <!--<location>/Users/brandsema/IdeaProjects/snowstorm/snowstorm-gui/target/snowstorm-gui.war</location>-->
+                                <!--<type>war</type>-->
+                                <!--<properties>-->
+                                    <!--<context>/snowstorm-gui</context>-->
+                                <!--</properties>-->
+                            <!--</deployable>-->
+                        <!--</deployables>-->
+                    <!--</configuration>-->
+                <!--</configuration>-->
+
+            <!--</plugin>-->
+        </plugins>
+    </build>
+    
+</project>
