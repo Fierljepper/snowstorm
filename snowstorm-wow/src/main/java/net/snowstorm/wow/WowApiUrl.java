@@ -1,7 +1,7 @@
 package net.snowstorm.wow;
 
 import net.snowstorm.core.url.BattlenetRegion;
-import net.snowstorm.core.url.BattlenetUrl;
+import net.snowstorm.core.url.BattlenetApiUrl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,12 +10,15 @@ import net.snowstorm.core.url.BattlenetUrl;
  * Time: 5:48 PM
  * To change this template use File | Settings | File Templates.
  */
-class WowUrl extends BattlenetUrl{
+class WowApiUrl extends BattlenetApiUrl {
     
     private String wowPath = "/wow";
 
+    public WowApiUrl(){
 
-    public WowUrl(BattlenetRegion region) {
+    }
+
+    public WowApiUrl(BattlenetRegion region) {
         super(region);
     }
 
@@ -29,6 +32,6 @@ class WowUrl extends BattlenetUrl{
     
     @Override
     public String getUrl(){
-        return super.getUrl() + getWowPath() + getLocale();
+        return super.getUrl() + getWowPath();
     }
 }

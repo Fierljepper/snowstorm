@@ -9,5 +9,5 @@ package net.snowstorm.core.url;
  */
 public interface BattlenetDomain {
     public static final String DEFAULT_BATTLENET_DOMAIN = ".battle.net";
-    public static final String CN_BATTLENET_DOMAIN = "battlenet.com.";
+    public static final String CN_BATTLENET_DOMAIN = "www.battlenet.com.";
 }

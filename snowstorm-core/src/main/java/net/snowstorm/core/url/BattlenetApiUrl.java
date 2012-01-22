@@ -2,15 +2,20 @@ package net.snowstorm.core.url;
 
 import java.util.Map;
 
-public class BattlenetUrl {
+public class BattlenetApiUrl {
 
     private String scheme = "http://";
     private BattlenetRegion region;
     private Map<String, String> locales;
     private String host;
+    private String globalApiPath = "/api";
     private String locale;
 
-    public BattlenetUrl(BattlenetRegion region){
+    public BattlenetApiUrl(){
+
+    }
+
+    public BattlenetApiUrl(BattlenetRegion region){
         setRegion(region);
     }
 
@@ -52,7 +57,15 @@ public class BattlenetUrl {
         return host;
     }
 
+    public String getGlobalApiPath() {
+        return globalApiPath;
+    }
+
+    public void setGlobalApiPath(String globalApiPath) {
+        this.globalApiPath = globalApiPath;
+    }
+
     public String getUrl(){
-        return getScheme() + getHost();
+        return getScheme() + getHost() + getGlobalApiPath();
     }
 }

@@ -8,6 +8,6 @@ package net.snowstorm.wow;
  * To change this template use File | Settings | File Templates.
  */
 public interface WowApi {
-
+    
     public String getApiPath();
 }

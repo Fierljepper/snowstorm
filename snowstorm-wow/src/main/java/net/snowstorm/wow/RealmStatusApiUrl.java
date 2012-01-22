@@ -9,12 +9,16 @@ import net.snowstorm.core.url.BattlenetRegion;
  * Time: 5:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RealmStatusApi extends WowUrl implements WowApi{
+public class RealmStatusApiUrl extends WowApiUrl implements WowApi{
 
     private String apiPath = "/realm/status";
 
 
-    public RealmStatusApi(BattlenetRegion region) {
+    public RealmStatusApiUrl(){
+
+    }
+
+    public RealmStatusApiUrl(BattlenetRegion region) {
         super(region);
     }
 
