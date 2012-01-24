@@ -94,8 +94,8 @@ public class RealmStatusLayout extends VerticalLayout {
         Window.Notification n = new Window.Notification("POJO state",
                 Window.Notification.TYPE_TRAY_NOTIFICATION);
         n.setPosition(Window.Notification.POSITION_CENTERED);
-        n.setDescription("Battlenet region: " + realmStatus.getBattlenetRegion()
-                + "<br/>Realm list: " + realmStatus.getRealms()
+        n.setDescription("Region: " + realmStatus.getBattlenetRegion()
+                + "<br/>Realms:" + realmStatus.getRealms()
                 + "<br/>UUID: " + realmStatus.getUuid());
         getWindow().showNotification(n);
     }

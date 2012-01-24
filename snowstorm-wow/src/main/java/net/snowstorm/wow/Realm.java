@@ -72,4 +72,9 @@ public class Realm {
     public void setBattlegroup(String battlegroup) {
         this.battlegroup = battlegroup;
     }
+
+    @Override
+    public String toString(){
+        return getName();
+    }
 }
