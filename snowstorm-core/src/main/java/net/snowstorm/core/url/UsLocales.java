@@ -7,7 +7,7 @@ package net.snowstorm.core.url;
  * Time: 6:41 PM
  * To change this template use File | Settings | File Templates.
  */
-public class UsLocales extends AbstractBattlenetLocales{
+class UsLocales extends AbstractBattlenetLocales{
 
     {
         locales.put("en_US", "en");
