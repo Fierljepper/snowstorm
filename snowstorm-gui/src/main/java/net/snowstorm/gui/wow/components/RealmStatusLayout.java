@@ -1,14 +1,17 @@
 package net.snowstorm.gui.wow.components;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.BaseTheme;
 import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.gui.wow.WowLayout;
 import net.snowstorm.gui.wow.pojo.RealmStatus;
+import net.snowstorm.wow.Realm;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +24,14 @@ public class RealmStatusLayout extends VerticalLayout {
 
     private RealmStatus realmStatus;
 
+    private WowLayout wowLayout;
+
+    @Override
+    public void attach(){
+        super.attach();
+        wowLayout = (WowLayout) getParent();
+    }
+
     public RealmStatusLayout(){
         realmStatus = new RealmStatus();
         BeanItem<RealmStatus> realmStatusItem = new BeanItem<RealmStatus>(realmStatus);
@@ -32,12 +43,12 @@ public class RealmStatusLayout extends VerticalLayout {
         realmStatusForm.setInvalidCommitted(false);
 
         // FieldFactory for customizing the fields and adding validators
-        realmStatusForm.setFormFieldFactory(new PersonFieldFactory());
+        realmStatusForm.setFormFieldFactory(new RealmStatusFieldFactory());
         realmStatusForm.setItemDataSource(realmStatusItem);
 
         // Determines which properties are shown, and in which order:
         realmStatusForm.setVisibleItemProperties(Arrays.asList(new String[]{
-                "battlenetRegion", "realmList", "uuid"}));
+                "battlenetRegion", "realms", "uuid"}));
 
         // Add form to layout
         addComponent(realmStatusForm);
@@ -84,21 +95,22 @@ public class RealmStatusLayout extends VerticalLayout {
                 Window.Notification.TYPE_TRAY_NOTIFICATION);
         n.setPosition(Window.Notification.POSITION_CENTERED);
         n.setDescription("Battlenet region: " + realmStatus.getBattlenetRegion()
-                + "<br/>Realm list: " + realmStatus.getRealmList()
+                + "<br/>Realm list: " + realmStatus.getRealms()
                 + "<br/>UUID: " + realmStatus.getUuid());
         getWindow().showNotification(n);
     }
 
-    private class PersonFieldFactory extends DefaultFieldFactory {
+    private class RealmStatusFieldFactory extends DefaultFieldFactory {
 
         final BattlenetRegion[] regionValues = BattlenetRegion.values();
 
         final ComboBox regionComboBox = new ComboBox("Region");
         final TwinColSelect realmTwinColSelect = new TwinColSelect();
 
-        public PersonFieldFactory(){
+        public RealmStatusFieldFactory(){
             regionComboBox.setInputPrompt("Region");
             regionComboBox.setWidth("6em");
+            regionComboBox.addListener(new RegionComboboxValueChangeListener());
             for (BattlenetRegion regionValue: regionValues){
                 regionComboBox.addItem(regionValue);
             }
@@ -121,7 +133,7 @@ public class RealmStatusLayout extends VerticalLayout {
             if ("battlenetRegion".equals(propertyId)) {
                 // filtering ComboBox with regions
                 return regionComboBox;
-            } else if ("realmList".equals(propertyId)) {
+            } else if ("realms".equals(propertyId)) {
                 // Create a password field so the password is not shown
                 return realmTwinColSelect;
             } else {
@@ -136,6 +148,32 @@ public class RealmStatusLayout extends VerticalLayout {
             }
             return f;
         }
+
+        public class RegionComboboxValueChangeListener implements Property.ValueChangeListener {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                // Reset components
+                resetComponents();
+                BattlenetRegion battlenetRegion = (BattlenetRegion)regionComboBox.getValue();
+                if (battlenetRegion != null){
+
+                    List<Realm> realms =  wowLayout.regionRealmsMap.get(battlenetRegion);
+                    for (Realm realm: realms) {
+                        realmTwinColSelect.addItem(realm);
+                        realmTwinColSelect.setItemCaption(realm, realm.getName());
+                    }
+//                setPayload();
+                }
+            }
+        }
+
+        private void resetComponents(){
+//            snowstormApplication.getPayloadTextAre().setValue("");
+//            urlLabel.setValue("");
+            realmTwinColSelect.removeAllItems();
+        }
     }
+
+
 
 }

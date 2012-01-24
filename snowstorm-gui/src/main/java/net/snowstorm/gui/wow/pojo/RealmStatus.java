@@ -4,7 +4,7 @@ import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.wow.Realm;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class RealmStatus implements Serializable {
 
     private BattlenetRegion battlenetRegion;
-    private List<Realm> realmList;
+    private Collection<Realm> realms;
     private UUID uuid;
 
     public RealmStatus(){
@@ -32,12 +32,12 @@ public class RealmStatus implements Serializable {
         this.battlenetRegion = battlenetRegion;
     }
 
-    public List<Realm> getRealmList() {
-        return realmList;
+    public Collection<Realm> getRealms() {
+        return realms;
     }
 
-    public void setRealmList(List<Realm> realmList) {
-        this.realmList = realmList;
+    public void setRealms(Collection<Realm> realms) {
+        this.realms = realms;
     }
 
     public UUID getUuid() {
