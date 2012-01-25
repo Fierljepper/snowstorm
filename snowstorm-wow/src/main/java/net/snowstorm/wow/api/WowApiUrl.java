@@ -1,4 +1,4 @@
-package net.snowstorm.wow;
+package net.snowstorm.wow.api;
 
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.url.BattlenetApiUrl;

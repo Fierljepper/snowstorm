@@ -4,11 +4,11 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.BaseTheme;
 import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.gui.wow.pojo.RealmStatus;
 import net.snowstorm.wow.Realm;
+import net.snowstorm.wow.api.RealmStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,22 +22,29 @@ import java.util.List;
  */
 public class RealmStatusLayout extends VerticalLayout {
 
+    final private Form realmStatusForm;
+
     private RealmStatus realmStatus;
 
     private WowLayout wowLayout;
+    private SnowstormApplication snowstormApplication;
 
     @Override
     public void attach(){
         super.attach();
         wowLayout = (WowLayout) getParent();
+        snowstormApplication = (SnowstormApplication) getApplication();
     }
 
     public RealmStatusLayout(){
+        setMargin(true, true, true, true);
+
         realmStatus = new RealmStatus();
         BeanItem<RealmStatus> realmStatusItem = new BeanItem<RealmStatus>(realmStatus);
 
         // Create the Form
-        final Form realmStatusForm = new Form();
+        realmStatusForm = new Form();
+
         realmStatusForm.setCaption("Realm Status API");
         realmStatusForm.setWriteThrough(false);
         realmStatusForm.setInvalidCommitted(false);
@@ -48,36 +55,36 @@ public class RealmStatusLayout extends VerticalLayout {
 
         // Determines which properties are shown, and in which order:
         realmStatusForm.setVisibleItemProperties(Arrays.asList(new String[]{
-                "battlenetRegion", "realms", "uuid"}));
+                "region", "realms"}));
 
         // Add form to layout
         addComponent(realmStatusForm);
 
-        // The cancel / apply buttons
+        // The reset / submit buttons
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
-        Button discardChanges = new Button("Discard changes",
+        Button reset = new Button("Reset",
                 new Button.ClickListener() {
                     public void buttonClick(Button.ClickEvent event) {
                         realmStatusForm.discard();
                     }
                 });
-        discardChanges.setStyleName(BaseTheme.BUTTON_LINK);
-        buttons.addComponent(discardChanges);
-        buttons.setComponentAlignment(discardChanges, Alignment.MIDDLE_LEFT);
+        buttons.addComponent(reset);
+        buttons.setComponentAlignment(reset, Alignment.MIDDLE_LEFT);
 
-        Button apply = new Button("Apply", new Button.ClickListener() {
+        Button submit = new Button("Submit", new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
                 try {
                     realmStatusForm.commit();
+                    snowstormApplication.setPayload(realmStatus.getUrl());
                 } catch (Exception e) {
                     // Ignored, we'll let the Form handle the errors
                 }
             }
         });
-        buttons.addComponent(apply);
+        buttons.addComponent(submit);
         realmStatusForm.getFooter().addComponent(buttons);
-        realmStatusForm.getFooter().setMargin(false, false, true, true);
+        realmStatusForm.getFooter().setMargin(false, false, true, false);
 
         // button for showing the internal state of the POJO
         Button showPojoState = new Button("Show POJO internal state",
@@ -94,7 +101,7 @@ public class RealmStatusLayout extends VerticalLayout {
         Window.Notification n = new Window.Notification("POJO state",
                 Window.Notification.TYPE_TRAY_NOTIFICATION);
         n.setPosition(Window.Notification.POSITION_CENTERED);
-        n.setDescription("Region: " + realmStatus.getBattlenetRegion()
+        n.setDescription("Region: " + realmStatus.getRegion()
                 + "<br/>Realms:" + realmStatus.getRealms()
                 + "<br/>UUID: " + realmStatus.getUuid());
         getWindow().showNotification(n);
@@ -124,13 +131,13 @@ public class RealmStatusLayout extends VerticalLayout {
             realmTwinColSelect.setImmediate(true);
             realmTwinColSelect.setLeftColumnCaption("Available realms");
             realmTwinColSelect.setRightColumnCaption("Selected realms");
-            realmTwinColSelect.setWidth("450px");
+            realmTwinColSelect.setWidth("30em");
         }
 
         @Override
         public Field createField(Item item, Object propertyId, Component uiContext) {
             Field f;
-            if ("battlenetRegion".equals(propertyId)) {
+            if ("region".equals(propertyId)) {
                 // filtering ComboBox with regions
                 return regionComboBox;
             } else if ("realms".equals(propertyId)) {
@@ -153,7 +160,7 @@ public class RealmStatusLayout extends VerticalLayout {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
                 // Reset components
-                resetComponents();
+                realmTwinColSelect.removeAllItems();
                 BattlenetRegion battlenetRegion = (BattlenetRegion)regionComboBox.getValue();
                 if (battlenetRegion != null){
 
@@ -162,18 +169,8 @@ public class RealmStatusLayout extends VerticalLayout {
                         realmTwinColSelect.addItem(realm);
                         realmTwinColSelect.setItemCaption(realm, realm.getName());
                     }
-//                setPayload();
                 }
             }
         }
-
-        private void resetComponents(){
-//            snowstormApplication.getPayloadTextAre().setValue("");
-//            urlLabel.setValue("");
-            realmTwinColSelect.removeAllItems();
-        }
     }
-
-
-
 }

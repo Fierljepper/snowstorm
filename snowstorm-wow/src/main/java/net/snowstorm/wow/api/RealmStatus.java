@@ -1,0 +1,67 @@
+package net.snowstorm.wow.api;
+
+import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.wow.Realm;
+import net.snowstorm.wow.WowApi;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.UUID;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: brandsema
+ * Date: 1/19/12
+ * Time: 5:34 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class RealmStatus extends WowApiUrl implements WowApi, Serializable {
+
+    private String apiPath = "/realm/status";
+
+    private String realmsParameter = "?realms=";
+
+    private Collection<Realm> realms;
+
+    private UUID uuid = UUID.randomUUID();
+
+    public RealmStatus(){
+
+    }
+
+    public RealmStatus(BattlenetRegion region) {
+        super(region);
+    }
+
+    public Collection<Realm> getRealms() {
+        return realms;
+    }
+
+    public void setRealms(Collection<Realm> realms) {
+        this.realms = realms;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public String getUrl() {
+        String realmsParamater = "";
+        // FIXME Not the most efficient
+        if (realms != null && realms.size() > 0){
+            realmsParamater = this.realmsParameter;
+            for (Realm realm:realms){
+                realmsParamater+= realm.getSlug() + ",";
+            }
+            realmsParamater = realmsParamater.substring(0, realmsParamater.length() -1);
+        }
+
+        return super.getUrl() + getApiPath() + realmsParamater;
+    }
+
+    @Override
+    public String getApiPath() {
+        return apiPath;
+    }
+}
