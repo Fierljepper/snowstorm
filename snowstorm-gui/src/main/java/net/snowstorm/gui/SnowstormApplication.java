@@ -1,5 +1,10 @@
 package net.snowstorm.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
@@ -7,13 +12,11 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.gui.wow.WowLayout;
+import net.snowstorm.wow.Realms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -55,6 +58,7 @@ public class SnowstormApplication extends Application {
         urlLabel = new Label();
         mainWindow.addComponent(urlLabel);
 
+        payloadTextAre.setCaption("API Payload");
         payloadTextAre.setRows(80);
         payloadTextAre.setColumns(80);
         payloadTextAre.setImmediate(true);
@@ -81,17 +85,28 @@ public class SnowstormApplication extends Application {
         UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
         try {
             InputStream inputStream = urlConnectionReader.fetch(new URL(url));
+//            payloadTextAre.setValue(inputStringAsString(inputStream));
 
-//            JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-//            Gson gsonIn = new Gson();
-//            Realms realms = gsonIn.fromJson(reader, Realms.class);
-//            Gson gsonOut = new GsonBuilder().setPrettyPrinting().create();
+            String prettyJsonString = prettyPrint(inputStream);
 
-            payloadTextAre.setValue(inputStringAsString(inputStream));
+            payloadTextAre.setValue(prettyJsonString);
         } catch (MalformedURLException e) {
             LOG.error("Malformed URL", e);
         } catch (IOException e) {
             LOG.error("Failed to convert InputStream to String", e);
         }
+    }
+    
+    private String prettyPrint(InputStream json) {
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new InputStreamReader(json, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("UTF-8 not supported", e);
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(reader);
+        return gson.toJson(jsonElement);
     }
 }
