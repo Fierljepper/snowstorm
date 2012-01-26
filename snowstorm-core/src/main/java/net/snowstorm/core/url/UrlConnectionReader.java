@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -44,6 +46,8 @@ public class UrlConnectionReader {
     private String proxyHost;
     
     private String proxyPort;
+
+    private Map<String, List<String>> responseProperties;
 
     public final int getResponseCode() {
         return this.responseCode;
@@ -86,6 +90,10 @@ public class UrlConnectionReader {
         this.proxyPort = proxyPort;
     }
 
+    public Map<String, List<String>> getResponseProperties() {
+        return responseProperties;
+    }
+
     public final InputStream fetch(final URL url) {
         try {
             final Properties systemProperties = System.getProperties();
@@ -102,6 +110,7 @@ public class UrlConnectionReader {
             this.contentTypeHeader = connection.getContentType();
             this.contentEncodingHeader = connection.getContentEncoding();
             this.contentLengthHeader = connection.getContentLength();
+            this.responseProperties = connection.getHeaderFields();
             if (((this.responseCode == INTERNAL_SERVER_ERROR) || (this.responseCode == SERVICE_UNAVAILABLE))
                     && (this.reconnectAttempts > 0)) {
                 this.reconnectAttempts--;

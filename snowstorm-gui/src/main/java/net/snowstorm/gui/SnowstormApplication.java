@@ -7,18 +7,18 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.Realms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +38,10 @@ public class SnowstormApplication extends Application {
 
 
     private final TextArea payloadTextAre = new TextArea();
+    private Label payloadText;
+    private Table responsePropertiesTable = new Table("Response properties");
     private Label urlLabel;
+    private HorizontalSplitPanel horizontalSplitPanel;
 
     @Override
     public void init() {
@@ -58,11 +61,26 @@ public class SnowstormApplication extends Application {
         urlLabel = new Label();
         mainWindow.addComponent(urlLabel);
 
-        payloadTextAre.setCaption("API Payload");
-        payloadTextAre.setRows(80);
-        payloadTextAre.setColumns(80);
-        payloadTextAre.setImmediate(true);
-        mainWindow.addComponent(payloadTextAre);
+        horizontalSplitPanel = new HorizontalSplitPanel();
+        horizontalSplitPanel.setSplitPosition(50, Sizeable.UNITS_PERCENTAGE);
+        horizontalSplitPanel.setSizeFull();
+        horizontalSplitPanel.setHeight("450px");
+        horizontalSplitPanel.setLocked(false);
+        mainWindow.addComponent(horizontalSplitPanel);
+
+        payloadText = new Label();
+        payloadText.setContentMode(Label.CONTENT_PREFORMATTED);
+        horizontalSplitPanel.addComponent(payloadText);
+
+//        payloadTextAre.setCaption("API Payload");
+//        payloadTextAre.setSizeFull();
+//        payloadTextAre.setImmediate(true);
+//        horizontalSplitPanel.addComponent(payloadTextAre);
+
+        responsePropertiesTable.setSizeFull();
+        responsePropertiesTable.addContainerProperty("Property", String.class, null);
+        responsePropertiesTable.addContainerProperty("Value", List.class, null);
+        horizontalSplitPanel.addComponent(responsePropertiesTable);
 
 
         setMainWindow(mainWindow);
@@ -83,27 +101,47 @@ public class SnowstormApplication extends Application {
     public void setPayload(String url){
         urlLabel.setValue(url);
         UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
+        InputStream inputStream = null;
         try {
-            InputStream inputStream = urlConnectionReader.fetch(new URL(url));
-//            payloadTextAre.setValue(inputStringAsString(inputStream));
-
-            String prettyJsonString = prettyPrint(inputStream);
-
-            payloadTextAre.setValue(prettyJsonString);
+            inputStream = urlConnectionReader.fetch(new URL(url));
+            JsonReader reader = getJsonReader(inputStream, "UTF-8");
+            String prettyJsonString = prettyPrint(reader);
+            payloadText.setValue(prettyJsonString);
+            // FIXME don't want to set the table from within this method
+            setResponsePropertiesTable(urlConnectionReader.getResponseProperties());
+            
         } catch (MalformedURLException e) {
             LOG.error("Malformed URL", e);
         } catch (IOException e) {
             LOG.error("Failed to convert InputStream to String", e);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                LOG.error("Unable to close InputStream", e);
+            }
         }
     }
     
-    private String prettyPrint(InputStream json) {
+    private void setResponsePropertiesTable(Map<String, List<String>> requestProperties) {
+        responsePropertiesTable.removeAllItems();
+        for (Map.Entry<String, List<String>> entry : requestProperties.entrySet()){
+            responsePropertiesTable.addItem(new Object[]{entry.getKey(), entry.getValue()}, null);
+        }
+    }
+    
+    
+    private JsonReader getJsonReader(InputStream json, String characterEncoding) {
         JsonReader reader = null;
         try {
-            reader = new JsonReader(new InputStreamReader(json, "UTF-8"));
+            reader = new JsonReader(new InputStreamReader(json, characterEncoding));
         } catch (UnsupportedEncodingException e) {
-            LOG.error("UTF-8 not supported", e);
+            LOG.error(characterEncoding +" not supported", e);
         }
+        return reader;
+    }
+
+    private String prettyPrint(JsonReader reader) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(reader);

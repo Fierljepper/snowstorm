@@ -73,10 +73,17 @@ public class WowLayout extends VerticalLayout {
                     realmsList.add(realm);
                 }
                 regionRealmsMap.put(region, realmsList);
+
             } catch (MalformedURLException e) {
                 LOG.error("Malformed URL", e);
             } catch (IOException e) {
                 LOG.error("Failed to convert InputStream to String", e);
+            } finally {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    LOG.error("Unable to close InputStream", e);
+                }
             }
         }
     }
