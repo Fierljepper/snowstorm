@@ -79,6 +79,7 @@ public class WowLayout extends VerticalLayout {
             } catch (IOException e) {
                 LOG.error("Failed to convert InputStream to String", e);
             } finally {
+                urlConnectionReader.disconnect();
                 try {
                     inputStream.close();
                 } catch (IOException e) {

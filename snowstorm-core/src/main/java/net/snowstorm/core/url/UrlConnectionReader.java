@@ -1,12 +1,16 @@
 package net.snowstorm.core.url;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +51,20 @@ public class UrlConnectionReader {
     
     private String proxyPort;
 
+    private HttpURLConnection connection;
+
     private Map<String, List<String>> responseProperties;
 
+    private static Map<String, String> requestHeaders;
+
+    static {
+        requestHeaders = new HashMap<String, String>();
+        requestHeaders.put("Accept","application/json");
+        requestHeaders.put("Accept-Charset","utf-8");
+        requestHeaders.put("Accept-Encoding","gzip,deflate,sdch");
+    }
+
+    
     public final int getResponseCode() {
         return this.responseCode;
     }
@@ -90,6 +106,10 @@ public class UrlConnectionReader {
         this.proxyPort = proxyPort;
     }
 
+    public void disconnect(){
+        this.connection.disconnect();
+    }
+
     public Map<String, List<String>> getResponseProperties() {
         return responseProperties;
     }
@@ -102,7 +122,10 @@ public class UrlConnectionReader {
                 systemProperties.setProperty("http.proxyPort", getProxyPort());
             }
 
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
+            for (Map.Entry<String, String> header : requestHeaders.entrySet()){
+                connection.setRequestProperty(header.getKey(), header.getValue());
+            }
             /*
             * Set class properties
             */
@@ -127,7 +150,7 @@ public class UrlConnectionReader {
                 this.reconnectAttempts = RECONNECT_ATTEMPTS;
                 connection.connect();
                 LOG.info("Fetching InputStream from URL: " + url.toString());
-                return connection.getInputStream();
+                return new GZIPInputStream(connection.getInputStream());
             }
 
         } catch (final InterruptedException e) {

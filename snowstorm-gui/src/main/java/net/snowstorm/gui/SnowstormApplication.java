@@ -36,11 +36,10 @@ public class SnowstormApplication extends Application {
     public static final ExternalResource D3_ICON_EXTERNAL_RESOURCE = new ExternalResource("http://us.battle.net/d3/static/local-common/images/favicons/d3.ico");
     public static final ExternalResource SC2_ICON_EXTERNAL_RESOURCE = new ExternalResource("http://us.battle.net/sc2/static/local-common/images/favicons/sc2.ico");
 
-
-    private final TextArea payloadTextAre = new TextArea();
     private Label payloadText;
+    private Table payloadTable = new Table();
     private Table responsePropertiesTable = new Table("Response properties");
-    private Label urlLabel;
+//    private Label urlLabel;
     private HorizontalSplitPanel horizontalSplitPanel;
 
     @Override
@@ -58,8 +57,8 @@ public class SnowstormApplication extends Application {
         tabSheet.addTab(sc2Label, "StarCraft II", SC2_ICON_EXTERNAL_RESOURCE);
         mainWindow.addComponent(tabSheet);
 
-        urlLabel = new Label();
-        mainWindow.addComponent(urlLabel);
+//        urlLabel = new Label();
+//        mainWindow.addComponent(urlLabel);
 
         horizontalSplitPanel = new HorizontalSplitPanel();
         horizontalSplitPanel.setSplitPosition(50, Sizeable.UNITS_PERCENTAGE);
@@ -68,14 +67,14 @@ public class SnowstormApplication extends Application {
         horizontalSplitPanel.setLocked(false);
         mainWindow.addComponent(horizontalSplitPanel);
 
+        payloadTable.setSizeFull();
+        payloadTable.addContainerProperty("API Payload", Label.class, null);
+//        payloadTable.setColumnAlignment("API Payload", Table.ALIGN_CENTER);
+        horizontalSplitPanel.addComponent(payloadTable);
+
         payloadText = new Label();
         payloadText.setContentMode(Label.CONTENT_PREFORMATTED);
-        horizontalSplitPanel.addComponent(payloadText);
-
-//        payloadTextAre.setCaption("API Payload");
-//        payloadTextAre.setSizeFull();
-//        payloadTextAre.setImmediate(true);
-//        horizontalSplitPanel.addComponent(payloadTextAre);
+        payloadTable.addItem(new Object[]{payloadText}, null);
 
         responsePropertiesTable.setSizeFull();
         responsePropertiesTable.addContainerProperty("Property", String.class, null);
@@ -99,7 +98,7 @@ public class SnowstormApplication extends Application {
     }
 
     public void setPayload(String url){
-        urlLabel.setValue(url);
+//        urlLabel.setValue(url);
         UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
         InputStream inputStream = null;
         try {
@@ -115,6 +114,7 @@ public class SnowstormApplication extends Application {
         } catch (IOException e) {
             LOG.error("Failed to convert InputStream to String", e);
         } finally {
+            urlConnectionReader.disconnect();
             try {
                 inputStream.close();
             } catch (IOException e) {
