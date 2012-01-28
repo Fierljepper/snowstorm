@@ -2,70 +2,36 @@ package net.snowstorm.core.url;
 
 import java.util.Map;
 
-public class BattlenetApiUrl {
+/**
+ * Created by IntelliJ IDEA.
+ * User: developer
+ * Date: 1/28/12
+ * Time: 10:37 AM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface BattlenetApiUrl {
 
-    private String scheme = "http://";
-    private BattlenetRegion region;
-    private Map<String, String> locales;
-    private String host;
-    private String globalApiPath = "/api";
-    private String locale;
+    public String getScheme();
 
-    public BattlenetApiUrl(){
+    public void setScheme(String scheme);
 
-    }
+    public BattlenetRegion getRegion();
 
-    public BattlenetApiUrl(BattlenetRegion region){
-        setRegion(region);
-    }
+    public void setRegion(BattlenetRegion region);
 
-    public String getScheme() {
-        return scheme;
-    }
+    public String getDomain();
 
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
-    }
+    public String getLocale();
 
-    public BattlenetRegion getRegion() {
-        return region;
-    }
+    public void setLocale(String locale);
 
-    public void setRegion(BattlenetRegion region) {
-        this.region = region;
-        this.locales = region.getLocales();
-        this.host = region.getHost();
-    }
+    public Map<String, String> getLocales();
 
-    public String getDomain() {
-        return host;
-    }
+    public String getHost();
 
-    public String getLocale() {
-        return "/" + locale;
-    }
+    public String getGlobalApiPath();
 
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
+    public void setGlobalApiPath(String globalApiPath);
 
-    public Map<String, String> getLocales() {
-        return locales;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getGlobalApiPath() {
-        return globalApiPath;
-    }
-
-    public void setGlobalApiPath(String globalApiPath) {
-        this.globalApiPath = globalApiPath;
-    }
-
-    public String getUrl(){
-        return getScheme() + getHost() + getGlobalApiPath();
-    }
+    public String getUrl();
 }
