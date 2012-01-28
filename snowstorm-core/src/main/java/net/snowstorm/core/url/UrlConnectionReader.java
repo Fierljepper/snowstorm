@@ -1,6 +1,8 @@
 package net.snowstorm.core.url;
 
-import java.io.DataOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -10,10 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.InflaterInputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -35,6 +33,8 @@ public class UrlConnectionReader {
 
     private static final int RECONNECT_ATTEMPTS = 10;
 
+    public static final String GZIP_CONTENT_ENCODING= "gzip";
+
     private int reconnectAttempts = RECONNECT_ATTEMPTS;
 
     private int responseCode;
@@ -55,13 +55,13 @@ public class UrlConnectionReader {
 
     private Map<String, List<String>> responseProperties;
 
-    private static Map<String, String> requestHeaders;
+    private Map<String, String> requestProperties;
 
-    static {
-        requestHeaders = new HashMap<String, String>();
-        requestHeaders.put("Accept","application/json");
-        requestHeaders.put("Accept-Charset","utf-8");
-        requestHeaders.put("Accept-Encoding","gzip,deflate,sdch");
+    {
+        requestProperties = new HashMap<String, String>();
+        requestProperties.put("Accept","application/json");
+        requestProperties.put("Accept-Charset", "utf-8");
+        requestProperties.put("Accept-Encoding", "gzip");
     }
 
     
@@ -114,6 +114,14 @@ public class UrlConnectionReader {
         return responseProperties;
     }
 
+    public void setRequestPropertie(final String requestPropertie, final String requestValue) {
+        this.requestProperties.put(requestPropertie, requestValue);
+    }
+
+    public java.util.Map<String, String> getRequestProperties() {
+        return requestProperties;
+    }
+
     public final InputStream fetch(final URL url) {
         try {
             final Properties systemProperties = System.getProperties();
@@ -123,7 +131,7 @@ public class UrlConnectionReader {
             }
 
             connection = (HttpURLConnection) url.openConnection();
-            for (Map.Entry<String, String> header : requestHeaders.entrySet()){
+            for (Map.Entry<String, String> header : requestProperties.entrySet()){
                 connection.setRequestProperty(header.getKey(), header.getValue());
             }
             /*
@@ -150,7 +158,10 @@ public class UrlConnectionReader {
                 this.reconnectAttempts = RECONNECT_ATTEMPTS;
                 connection.connect();
                 LOG.info("Fetching InputStream from URL: " + url.toString());
-                return new GZIPInputStream(connection.getInputStream());
+                if (getContentEncodingHeader().equals(GZIP_CONTENT_ENCODING)){
+                    return new GZIPInputStream(connection.getInputStream());
+                }
+                return connection.getInputStream();
             }
 
         } catch (final InterruptedException e) {

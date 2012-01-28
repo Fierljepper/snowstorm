@@ -7,8 +7,8 @@ import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.Realm;
 import net.snowstorm.wow.api.RealmStatus;
+import net.snowstorm.wow.beans.Realm;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +76,9 @@ public class RealmStatusLayout extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 try {
                     realmStatusForm.commit();
-                    snowstormApplication.setPayload(realmStatus.getUrl());
+                    wowLayout.getTransactionLayout().setPayload(realmStatus.getJsonPayload(realmStatus.getUrl()));
+                    wowLayout.getTransactionLayout().setRequestPropertiesTable(realmStatus.getUrlConnectionReader().getRequestProperties());
+                    wowLayout.getTransactionLayout().setResponsePropertiesTable(realmStatus.getUrlConnectionReader().getResponseProperties());
                 } catch (Exception e) {
                     // Ignored, we'll let the Form handle the errors
                 }

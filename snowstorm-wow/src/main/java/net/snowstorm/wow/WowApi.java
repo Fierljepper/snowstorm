@@ -1,5 +1,10 @@
 package net.snowstorm.wow;
 
+import net.snowstorm.core.url.BattlenetApiUrl;
+import net.snowstorm.core.url.UrlConnectionReader;
+
+import java.net.MalformedURLException;
+
 /**
  * Created by IntelliJ IDEA.
  * User: brandsema
@@ -7,7 +12,11 @@ package net.snowstorm.wow;
  * Time: 5:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface WowApi {
+public interface WowApi extends BattlenetApiUrl {
     
     public String getApiPath();
+
+    public String getJsonPayload(String url) throws MalformedURLException;
+
+    public UrlConnectionReader getUrlConnectionReader();
 }

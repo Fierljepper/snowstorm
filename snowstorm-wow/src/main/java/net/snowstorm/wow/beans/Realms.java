@@ -1,4 +1,4 @@
-package net.snowstorm.wow;
+package net.snowstorm.wow.beans;
 
 import java.util.List;
 

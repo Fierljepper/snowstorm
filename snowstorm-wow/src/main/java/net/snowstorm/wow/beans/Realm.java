@@ -1,4 +1,4 @@
-package net.snowstorm.wow;
+package net.snowstorm.wow.beans;
 
 /**
  * Created by IntelliJ IDEA.

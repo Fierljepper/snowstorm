@@ -1,7 +1,7 @@
 package net.snowstorm.wow.api;
 
 import net.snowstorm.core.url.BattlenetRegion;
-import net.snowstorm.wow.Realm;
+import net.snowstorm.wow.beans.Realm;
 import net.snowstorm.wow.WowApi;
 
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.util.UUID;
  * Time: 5:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RealmStatus extends WowApiUrl implements WowApi, Serializable {
+public class RealmStatus extends WowApiImpl implements Serializable {
 
     private String apiPath = "/realm/status";
 
@@ -64,4 +64,5 @@ public class RealmStatus extends WowApiUrl implements WowApi, Serializable {
     public String getApiPath() {
         return apiPath;
     }
+
 }
