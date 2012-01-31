@@ -2,7 +2,6 @@ package net.snowstorm.wow.api;
 
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.wow.beans.Realm;
-import net.snowstorm.wow.WowApi;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -47,17 +46,17 @@ public class RealmStatus extends WowApiImpl implements Serializable {
 
     @Override
     public String getUrl() {
-        String realmsParamater = "";
+        String realmsParameter = "";
         // FIXME Not the most efficient
         if (realms != null && realms.size() > 0){
-            realmsParamater = this.realmsParameter;
+            realmsParameter = this.realmsParameter;
             for (Realm realm:realms){
-                realmsParamater+= realm.getSlug() + ",";
+                realmsParameter+= realm.getSlug() + ",";
             }
-            realmsParamater = realmsParamater.substring(0, realmsParamater.length() -1);
+            realmsParameter = realmsParameter.substring(0, realmsParameter.length() -1);
         }
 
-        return super.getUrl() + getApiPath() + realmsParamater;
+        return super.getUrl() + getApiPath() + realmsParameter;
     }
 
     @Override

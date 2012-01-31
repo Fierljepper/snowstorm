@@ -3,16 +3,15 @@ package net.snowstorm.gui.wow;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetApiUrlImpl;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.TransactionLayout;
-import net.snowstorm.gui.wow.components.RealmStatusForm;
+import net.snowstorm.gui.wow.components.CharacterProfileForm;
+import net.snowstorm.wow.WowApi;
+import net.snowstorm.wow.api.CharacterProfile;
 import net.snowstorm.wow.api.RealmStatus;
 import net.snowstorm.wow.beans.Realm;
 import net.snowstorm.wow.beans.Realms;
@@ -40,12 +39,19 @@ public class WowLayout extends VerticalLayout {
 
     private static final Logger LOG = LoggerFactory.getLogger(WowLayout.class);
 
+    public static final String REALM_STATUS_API_CAPTION = "Realm Status API";
+    public static final String CHARACTER_PROFILE_API_CAPTION = "Character Profile API";
+
     private static final BattlenetRegion[] regionValues = BattlenetRegion.values();
     public static final Map<BattlenetRegion, List<Realm>> regionRealmsMap = new HashMap<BattlenetRegion, List<Realm>>();
 
-    private final RealmStatusForm realmStatusForm;
+    private Form form;
 
     private final TransactionLayout transactionLayout;
+
+    private Button realmStatusButton;
+    private Button characterProfileButton;
+
 
     static {
         fillRegionRealmsMap();
@@ -61,11 +67,32 @@ public class WowLayout extends VerticalLayout {
     }
 
     public WowLayout(){
-        final RealmStatus realmStatus = new RealmStatus();
-        BeanItem<RealmStatus> realmStatusBeanItem = new BeanItem<RealmStatus>(realmStatus);
-        realmStatusForm = new RealmStatusForm(realmStatusBeanItem);
-        addComponent(realmStatusForm);
+        final WowApi wowApi;
 
+
+        HorizontalLayout apiButtonSelectLayout = new HorizontalLayout();
+        apiButtonSelectLayout.setSpacing(true);
+        apiButtonSelectLayout.setMargin(true, false, true, true);
+        addComponent(apiButtonSelectLayout);
+
+        ApiSelectButtonClickListener apiSelectButtonClickListener = new ApiSelectButtonClickListener();
+        characterProfileButton = new Button(CHARACTER_PROFILE_API_CAPTION, apiSelectButtonClickListener);
+        characterProfileButton.setEnabled(false);
+        realmStatusButton = new Button(REALM_STATUS_API_CAPTION, apiSelectButtonClickListener);
+        apiButtonSelectLayout.addComponent(characterProfileButton);
+        apiButtonSelectLayout.addComponent(realmStatusButton);
+
+
+//        wowApi = new RealmStatus();
+//        BeanItem<RealmStatus> realmStatusBeanItem = new BeanItem<RealmStatus>((RealmStatus)wowApi);
+//        realmStatusForm = new RealmStatusForm(realmStatusBeanItem);
+//        addComponent(realmStatusForm);
+
+
+        wowApi = new CharacterProfile();
+        BeanItem<CharacterProfile> characterProfileBeanItem = new BeanItem<CharacterProfile>((CharacterProfile)wowApi);
+        form = new CharacterProfileForm(characterProfileBeanItem);
+        addComponent(form);
 
         // The reset / submit buttons
         HorizontalLayout buttons = new HorizontalLayout();
@@ -73,7 +100,7 @@ public class WowLayout extends VerticalLayout {
         Button reset = new Button("Reset",
                 new Button.ClickListener() {
                     public void buttonClick(Button.ClickEvent event) {
-                        realmStatusForm.discard();
+                        form.discard();
                     }
                 });
         buttons.addComponent(reset);
@@ -82,18 +109,18 @@ public class WowLayout extends VerticalLayout {
         Button submit = new Button("Submit", new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
                 try {
-                    realmStatusForm.commit();
-                    getTransactionLayout().setPayload(realmStatus.getJsonPayload(realmStatus.getUrl()));
-                    getTransactionLayout().setRequestPropertiesTable(realmStatus.getUrlConnectionReader().getRequestProperties());
-                    getTransactionLayout().setResponsePropertiesTable(realmStatus.getUrlConnectionReader().getResponseProperties());
+                    form.commit();
+                    getTransactionLayout().setPayload(wowApi.getJsonPayload(wowApi.getUrl()));
+                    getTransactionLayout().setRequestPropertiesTable(wowApi.getUrlConnectionReader().getRequestProperties());
+                    getTransactionLayout().setResponsePropertiesTable(wowApi.getUrlConnectionReader().getResponseProperties());
                 } catch (Exception e) {
                     // Ignored, we'll let the Form handle the errors
                 }
             }
         });
         buttons.addComponent(submit);
-        realmStatusForm.getFooter().addComponent(buttons);
-        realmStatusForm.getFooter().setMargin(false, false, true, true);
+        form.getFooter().addComponent(buttons);
+        form.getFooter().setMargin(true, false, true, true);
         
         
         transactionLayout = new TransactionLayout();
@@ -137,6 +164,14 @@ public class WowLayout extends VerticalLayout {
                     LOG.error("Unable to close InputStream", e);
                 }
             }
+        }
+    }
+
+    private class ApiSelectButtonClickListener implements Button.ClickListener {
+
+        @Override
+        public void buttonClick(final Button.ClickEvent event) {
+            Button clickedButton = event.getButton();
         }
     }
 }

@@ -13,6 +13,8 @@ import java.net.MalformedURLException;
  * To change this template use File | Settings | File Templates.
  */
 public interface WowApi extends BattlenetApiUrl {
+
+    public String getUrl();
     
     public String getApiPath();
 
