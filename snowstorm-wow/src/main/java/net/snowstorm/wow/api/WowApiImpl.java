@@ -67,8 +67,11 @@ abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi {
     @Override
     public String getJsonPayload(String url) throws MalformedURLException {
         InputStream inputStream = urlConnectionReader.fetch(new URL(url));
-        JsonReader reader = getJsonReader(inputStream, "UTF-8");
-        return prettyPrint(reader);
+        if (inputStream != null){
+            JsonReader reader = getJsonReader(inputStream, "UTF-8");
+            return prettyPrint(reader);
+        }
+        return String.valueOf(urlConnectionReader.getResponseCode());
     }
 
     // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload

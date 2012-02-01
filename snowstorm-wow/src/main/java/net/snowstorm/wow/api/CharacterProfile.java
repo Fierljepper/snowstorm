@@ -38,7 +38,7 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
     public CharacterProfile(BattlenetRegion region, Realm realm, String characterName){
         super(region);
         this.realm = realm;
-        setCharacterName(characterName);
+        this.characterName = characterName;
     }
 
     public Realm getRealm() {
@@ -58,12 +58,15 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
     }
 
     public void setCharacterName(final String characterName) {
-        try {
-            this.characterName = URLEncoder.encode(characterName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOG.error("Character encoding is set to UTF-8, this exception should not be thrown.",
-                    e);
-        }
+        this.characterName = characterName;
+    }
+
+    public Collection<CharacterProfileField> getCharacterProfileFields() {
+        return characterProfileFields;
+    }
+
+    public void setCharacterProfileFields(Collection<CharacterProfileField> characterProfileFields) {
+        this.characterProfileFields = characterProfileFields;
     }
 
     @Override
@@ -83,7 +86,17 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
             }
             fieldsParameter = fieldsParameter.substring(0, fieldsParameter.length() -1);
         }
-        
-        return super.getUrl() + getApiPath() + "/" + realm.getSlug() + "/" + characterName +fieldsParameter;
+
+        return super.getUrl() + getApiPath() + "/" + realm.getSlug() + "/" + urlEncodedString(characterName) + fieldsParameter;
+    }
+    
+    private String urlEncodedString(String unencodedString){
+        try {
+            return URLEncoder.encode(unencodedString, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Character encoding is set to UTF-8, this exception should not be thrown.",
+                    e);
+        }
+        return null;
     }
 }

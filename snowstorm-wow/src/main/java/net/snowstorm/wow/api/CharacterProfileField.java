@@ -18,5 +18,6 @@ public enum CharacterProfileField {
     PETS,
     ACHIEVEMENTS,
     PROGRESSION,
-    PVP;
+    PVP,
+    QUESTS;
 }

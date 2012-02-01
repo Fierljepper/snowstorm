@@ -7,6 +7,7 @@ import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.WowLayout;
 import net.snowstorm.wow.api.CharacterProfile;
+import net.snowstorm.wow.api.CharacterProfileField;
 import net.snowstorm.wow.beans.Realm;
 
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class CharacterProfileForm extends Form {
 
     public CharacterProfileForm(BeanItem<CharacterProfile> characterProfileBeanItem){
         setCaption(WowLayout.CHARACTER_PROFILE_API_CAPTION);
-        layout = new GridLayout(3, 3);
+        layout = new GridLayout(4, 4);
         layout.setMargin(true, false, false, true);
         layout.setSpacing(true);
         setLayout(layout);
@@ -41,7 +42,7 @@ public class CharacterProfileForm extends Form {
         setFormFieldFactory(new CharacterProfileFieldFactory());
         setItemDataSource(characterProfileBeanItem);
         setVisibleItemProperties(Arrays.asList(new String[]{
-                "region", "realm", "characterName"}));
+                "region", "realm", "characterName", "characterProfileFields"}));
     }
 
     @Override
@@ -52,14 +53,18 @@ public class CharacterProfileForm extends Form {
             layout.addComponent(field, 0, 1);
         } else if (propertyId.equals("characterName")) {
             layout.addComponent(field, 0, 2);
+        } else if (propertyId.equals("characterProfileFields")) {
+            layout.addComponent(field, 1, 0, 1, 3);
         }
     }
 
     private class CharacterProfileFieldFactory extends DefaultFieldFactory {
         final BattlenetRegion[] regionValues = BattlenetRegion.values();
+        final CharacterProfileField[] characterProfileFieldValues = CharacterProfileField.values();
 
         final ComboBox regionComboBox = new ComboBox("Region");
         final ComboBox realmComboBox = new ComboBox("Realm");
+        final OptionGroup fieldsOptionGroup = new OptionGroup("Optional Fields");
 
         public CharacterProfileFieldFactory(){
             regionComboBox.setRequired(true);
@@ -77,6 +82,11 @@ public class CharacterProfileForm extends Form {
             realmComboBox.setWidth(COMMON_FIELD_WIDTH);
             realmComboBox.setFilteringMode(ComboBox.FILTERINGMODE_STARTSWITH);
             realmComboBox.setImmediate(true);
+
+            fieldsOptionGroup.setMultiSelect(true);
+            for (CharacterProfileField characterProfileFieldValue:characterProfileFieldValues){
+                fieldsOptionGroup.addItem(characterProfileFieldValue);
+            }
         }
 
         @Override
@@ -86,6 +96,8 @@ public class CharacterProfileForm extends Form {
                 return regionComboBox;
             } else if ("realm".equals(propertyId)) {
                 return realmComboBox;
+            } else if ("characterProfileFields".equals(propertyId)) {
+                return fieldsOptionGroup;
             } else {
                 f = super.createField(item, propertyId, uiContext);
             }
@@ -93,6 +105,7 @@ public class CharacterProfileForm extends Form {
             if("characterName".equals(propertyId)) {
                 TextField tf = (TextField) f;
                 tf.setRequired(true);
+                tf.setNullRepresentation("");
                 tf.setInputPrompt("Character name");
                 tf.setWidth(COMMON_FIELD_WIDTH);
             } else if ("uuid".equals(propertyId)) {

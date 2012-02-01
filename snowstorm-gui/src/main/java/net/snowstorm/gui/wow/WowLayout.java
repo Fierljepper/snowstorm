@@ -114,7 +114,7 @@ public class WowLayout extends VerticalLayout {
                     getTransactionLayout().setRequestPropertiesTable(wowApi.getUrlConnectionReader().getRequestProperties());
                     getTransactionLayout().setResponsePropertiesTable(wowApi.getUrlConnectionReader().getResponseProperties());
                 } catch (Exception e) {
-                    // Ignored, we'll let the Form handle the errors
+                    LOG.error("Catch all: ", e);
                 }
             }
         });
