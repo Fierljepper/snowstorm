@@ -64,7 +64,7 @@ public class CharacterProfileForm extends Form {
 
         final ComboBox regionComboBox = new ComboBox("Region");
         final ComboBox realmComboBox = new ComboBox("Realm");
-        final OptionGroup fieldsOptionGroup = new OptionGroup("Optional Fields");
+        final TwinColSelect fieldsTwinColSelect = new TwinColSelect();
 
         public CharacterProfileFieldFactory(){
             regionComboBox.setRequired(true);
@@ -83,9 +83,17 @@ public class CharacterProfileForm extends Form {
             realmComboBox.setFilteringMode(ComboBox.FILTERINGMODE_STARTSWITH);
             realmComboBox.setImmediate(true);
 
-            fieldsOptionGroup.setMultiSelect(true);
+
+            fieldsTwinColSelect.setRows(10);
+            fieldsTwinColSelect.setNullSelectionAllowed(true);
+            fieldsTwinColSelect.setMultiSelect(true);
+            fieldsTwinColSelect.setImmediate(true);
+            fieldsTwinColSelect.setLeftColumnCaption("Available fields");
+            fieldsTwinColSelect.setRightColumnCaption("Selected fields");
+            fieldsTwinColSelect.setWidth("30em");
+            fieldsTwinColSelect.setMultiSelect(true);
             for (CharacterProfileField characterProfileFieldValue:characterProfileFieldValues){
-                fieldsOptionGroup.addItem(characterProfileFieldValue);
+                fieldsTwinColSelect.addItem(characterProfileFieldValue);
             }
         }
 
@@ -97,7 +105,7 @@ public class CharacterProfileForm extends Form {
             } else if ("realm".equals(propertyId)) {
                 return realmComboBox;
             } else if ("characterProfileFields".equals(propertyId)) {
-                return fieldsOptionGroup;
+                return fieldsTwinColSelect;
             } else {
                 f = super.createField(item, propertyId, uiContext);
             }

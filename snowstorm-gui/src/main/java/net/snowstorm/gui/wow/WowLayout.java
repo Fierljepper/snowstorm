@@ -10,6 +10,7 @@ import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.TransactionLayout;
 import net.snowstorm.gui.wow.components.CharacterProfileForm;
+import net.snowstorm.gui.wow.components.RealmStatusForm;
 import net.snowstorm.wow.WowApi;
 import net.snowstorm.wow.api.CharacterProfile;
 import net.snowstorm.wow.api.RealmStatus;
@@ -45,18 +46,22 @@ public class WowLayout extends VerticalLayout {
     private static final BattlenetRegion[] regionValues = BattlenetRegion.values();
     public static final Map<BattlenetRegion, List<Realm>> regionRealmsMap = new HashMap<BattlenetRegion, List<Realm>>();
 
-    private Form form;
+    private Form form = new Form();
+    private HorizontalLayout buttons = new HorizontalLayout();
 
     private final TransactionLayout transactionLayout;
 
     private Button realmStatusButton;
     private Button characterProfileButton;
 
+    WowApi wowApi;
 
+    
     static {
         fillRegionRealmsMap();
     }
 
+    private List<Button> apiSelectionButtons = new ArrayList<Button>();
 
     SnowstormApplication snowstormApplication;
 
@@ -67,9 +72,8 @@ public class WowLayout extends VerticalLayout {
     }
 
     public WowLayout(){
-        final WowApi wowApi;
 
-
+        // Api selection buttons horizontal layout
         HorizontalLayout apiButtonSelectLayout = new HorizontalLayout();
         apiButtonSelectLayout.setSpacing(true);
         apiButtonSelectLayout.setMargin(true, false, true, true);
@@ -83,19 +87,14 @@ public class WowLayout extends VerticalLayout {
         apiButtonSelectLayout.addComponent(realmStatusButton);
 
 
-//        wowApi = new RealmStatus();
-//        BeanItem<RealmStatus> realmStatusBeanItem = new BeanItem<RealmStatus>((RealmStatus)wowApi);
-//        realmStatusForm = new RealmStatusForm(realmStatusBeanItem);
-//        addComponent(realmStatusForm);
+        apiSelectionButtons.add(realmStatusButton);
+        apiSelectionButtons.add(characterProfileButton);
 
-
-        wowApi = new CharacterProfile();
-        BeanItem<CharacterProfile> characterProfileBeanItem = new BeanItem<CharacterProfile>((CharacterProfile)wowApi);
-        form = new CharacterProfileForm(characterProfileBeanItem);
+        apiSwitcher(CHARACTER_PROFILE_API_CAPTION);
         addComponent(form);
 
         // The reset / submit buttons
-        HorizontalLayout buttons = new HorizontalLayout();
+
         buttons.setSpacing(true);
         Button reset = new Button("Reset",
                 new Button.ClickListener() {
@@ -172,6 +171,38 @@ public class WowLayout extends VerticalLayout {
         @Override
         public void buttonClick(final Button.ClickEvent event) {
             Button clickedButton = event.getButton();
+            apiSwitcher(clickedButton.getCaption());
+        }
+    }
+    
+    private void apiSwitcher(String apiCaption){
+        Form form = new Form();
+        if (REALM_STATUS_API_CAPTION.equals(apiCaption)){
+            wowApi = new RealmStatus();
+            BeanItem<RealmStatus> realmStatusBeanItem = new BeanItem<RealmStatus>((RealmStatus)wowApi);
+            form = new RealmStatusForm(realmStatusBeanItem);
+        } else if (CHARACTER_PROFILE_API_CAPTION.equals(apiCaption)){
+            wowApi = new CharacterProfile();
+            BeanItem<CharacterProfile> characterProfileBeanItem = new BeanItem<CharacterProfile>((CharacterProfile)wowApi);
+            form = new CharacterProfileForm(characterProfileBeanItem);
+        }
+
+        setApiButtonState(apiCaption);
+
+        form.getFooter().addComponent(buttons);
+        form.getFooter().setMargin(true, false, true, true);
+
+        this.replaceComponent(this.form, form);
+        this.form = form;
+    }
+
+    private void setApiButtonState(String apiCaption){
+        for (Button apiSelectionButton: apiSelectionButtons){
+            if (apiSelectionButton.getCaption().equals(apiCaption)){
+                apiSelectionButton.setEnabled(false);
+            } else {
+                apiSelectionButton.setEnabled(true);
+            }
         }
     }
 }
