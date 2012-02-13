@@ -5,12 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -19,7 +17,9 @@ import java.util.zip.GZIPInputStream;
  * connecting to a specified URL and retrieving it's contents.
  * </p>
  */
-public class UrlConnectionReader {
+public class UrlConnectionReader implements Serializable {
+
+    private UUID uuid = UUID.fromString("0ec1e73b-c015-4c41-b6ed-7161bc73598c");
 
     private static final Logger LOG = LoggerFactory.getLogger(UrlConnectionReader.class);
 
@@ -53,7 +53,7 @@ public class UrlConnectionReader {
     
     private String proxyPort;
 
-    private HttpURLConnection connection;
+    private transient HttpURLConnection connection;
 
     private Map<String, List<String>> responseProperties;
 

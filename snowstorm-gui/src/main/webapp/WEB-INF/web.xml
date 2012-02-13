@@ -5,11 +5,13 @@
         <description>Vaadin production mode</description>
         <param-name>productionMode</param-name>
         <param-value>false</param-value>
+        <!--<param-value>true</param-value>-->
     </context-param>
 
     <servlet>
         <servlet-name>Vaadin Application Servlet</servlet-name>
         <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+        <!--<servlet-class>com.vaadin.terminal.gwt.server.GAEApplicationServlet</servlet-class>-->
         <init-param>
             <description>Vaadin application class to start</description>
             <param-name>application</param-name>

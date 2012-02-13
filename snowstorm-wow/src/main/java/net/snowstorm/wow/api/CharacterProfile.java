@@ -2,11 +2,13 @@ package net.snowstorm.wow.api;
 
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.wow.beans.Realm;
+import net.snowstorm.wow.beans.Character;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.UUID;
@@ -19,9 +21,9 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(CharacterProfile.class);
 
-    private String apiPath = "/character";
+    private static transient String apiPath = "/character";
 
-    private String fieldsParameter = "?fields=";
+    private static transient String fieldsParameter = "?fields=";
 
     private Realm realm;
 
@@ -29,7 +31,7 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
     
     private Collection<CharacterProfileField> characterProfileFields;
 
-    private UUID uuid = UUID.randomUUID();
+    private UUID uuid = UUID.fromString("46fc7341-fb6c-4413-b07c-c0272aafe4cf");
     
     public CharacterProfile(){
         
@@ -39,6 +41,10 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
         super(region);
         this.realm = realm;
         this.characterName = characterName;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Realm getRealm() {
@@ -51,10 +57,6 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
 
     public String getCharacterName() {
         return characterName;
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     public void setCharacterName(final String characterName) {
@@ -92,11 +94,18 @@ public class CharacterProfile extends WowApiImpl implements Serializable {
     
     private String urlEncodedString(String unencodedString){
         try {
-            return URLEncoder.encode(unencodedString, "UTF-8");
+            if (unencodedString != null){
+                return URLEncoder.encode(unencodedString, "UTF-8");
+            }
         } catch (UnsupportedEncodingException e) {
             LOG.error("Character encoding is set to UTF-8, this exception should not be thrown.",
                     e);
         }
         return null;
+    }
+
+    @Override
+    public Character getBeanPayload(String url) throws MalformedURLException {
+        return (Character) getBeanPayload(url, Character.class);
     }
 }

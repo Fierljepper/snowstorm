@@ -5,18 +5,21 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.url.BattlenetApiUrlImpl;
+import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.wow.WowApi;
+import net.snowstorm.wow.beans.WowBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,13 +28,15 @@ import java.net.URL;
  * Time: 5:48 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi {
+abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi, Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(WowApiImpl.class);
 
-    private String wowPath = "/wow";
+    private static transient String wowPath = "/wow";
 
-    private UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
+    UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
+
+    private UUID uuid = UUID.fromString("b043009c-93d6-438c-9bb6-1a76dd12bf7f");
 
     public WowApiImpl(){
 
@@ -75,7 +80,7 @@ abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi {
     }
 
     // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload
-    private JsonReader getJsonReader(InputStream json, String characterEncoding) {
+    JsonReader getJsonReader(InputStream json, String characterEncoding) {
         JsonReader reader = null;
         try {
             reader = new JsonReader(new InputStreamReader(json, characterEncoding));
@@ -83,6 +88,16 @@ abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi {
             LOG.error(characterEncoding +" not supported", e);
         }
         return reader;
+    }
+
+    public WowBean getBeanPayload(String url, Class type) throws MalformedURLException {
+        InputStream inputStream = urlConnectionReader.fetch(new URL(url));
+        if (inputStream != null){
+            JsonReader reader = getJsonReader(inputStream, "UTF-8");
+            Gson gson = new Gson();
+            return gson.fromJson(reader, type);
+        }
+        return null;
     }
 
     // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload

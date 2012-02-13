@@ -1,15 +1,19 @@
 package net.snowstorm.core.url;
 
+import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
-public class BattlenetApiUrlImpl implements BattlenetApiUrl {
+public class BattlenetApiUrlImpl implements BattlenetApiUrl, Serializable {
 
-    private String scheme = "http://";
+    private static transient String scheme = "http://";
     private BattlenetRegion region;
     private Map<String, String> locales;
-    private String host;
-    private String globalApiPath = "/api";
+    private transient String host;
+    private static transient String globalApiPath = "/api";
     private String locale;
+
+    private UUID uuid = UUID.fromString("60926e77-3918-44fe-8647-cc66c628c9aa");
 
     public BattlenetApiUrlImpl(){
 

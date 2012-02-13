@@ -1,5 +1,8 @@
 package net.snowstorm.wow.beans;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * Created by IntelliJ IDEA.
  * User: brandsema
@@ -7,7 +10,7 @@ package net.snowstorm.wow.beans;
  * Time: 6:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Realm {
+public class Realm extends WowBean implements Serializable {
     
     private String type;
     private String population;
@@ -16,6 +19,8 @@ public class Realm {
     private String name;
     private String slug;
     private String battlegroup;
+
+    private UUID uuid = UUID.fromString("19c83eac-dd9f-4c55-9f29-df192adcf70f");
 
     public String getType() {
         return type;

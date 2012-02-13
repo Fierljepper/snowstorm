@@ -1,6 +1,8 @@
 package net.snowstorm.core.url;
 
+import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,13 +11,14 @@ import java.util.Map;
  * Time: 5:38 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum BattlenetRegion {
+public enum BattlenetRegion implements Serializable {
     CN,
     EU,
     KR,
     TW,
     US;
 
+    private UUID uuid = UUID.fromString("dce23bbf-3d58-46c4-844e-4e17b850d461");
 
     public String getHost(){
         switch (this){

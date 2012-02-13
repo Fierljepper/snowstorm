@@ -65,6 +65,7 @@ public class CharacterProfileForm extends Form {
         final ComboBox regionComboBox = new ComboBox("Region");
         final ComboBox realmComboBox = new ComboBox("Realm");
         final TwinColSelect fieldsTwinColSelect = new TwinColSelect();
+        final TextField characterNameTextField = new TextField("Character name");
 
         public CharacterProfileFieldFactory(){
             regionComboBox.setRequired(true);
@@ -95,6 +96,12 @@ public class CharacterProfileForm extends Form {
             for (CharacterProfileField characterProfileFieldValue:characterProfileFieldValues){
                 fieldsTwinColSelect.addItem(characterProfileFieldValue);
             }
+
+            characterNameTextField.setRequired(true);
+            characterNameTextField.setNullRepresentation("");
+            characterNameTextField.setInputPrompt("Character name");
+            characterNameTextField.setWidth(COMMON_FIELD_WIDTH);
+            characterNameTextField.setImmediate(true);
         }
 
         @Override
@@ -106,17 +113,13 @@ public class CharacterProfileForm extends Form {
                 return realmComboBox;
             } else if ("characterProfileFields".equals(propertyId)) {
                 return fieldsTwinColSelect;
+            } else if("characterName".equals(propertyId)) {
+                return characterNameTextField;
             } else {
                 f = super.createField(item, propertyId, uiContext);
             }
 
-            if("characterName".equals(propertyId)) {
-                TextField tf = (TextField) f;
-                tf.setRequired(true);
-                tf.setNullRepresentation("");
-                tf.setInputPrompt("Character name");
-                tf.setWidth(COMMON_FIELD_WIDTH);
-            } else if ("uuid".equals(propertyId)) {
+            if ("uuid".equals(propertyId)) {
                 TextField tf = (TextField) f;
                 tf.setWidth("20em");
             }

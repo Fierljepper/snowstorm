@@ -2,6 +2,7 @@ package net.snowstorm.wow;
 
 import net.snowstorm.core.url.BattlenetApiUrl;
 import net.snowstorm.core.url.UrlConnectionReader;
+import net.snowstorm.wow.beans.WowBean;
 
 import java.net.MalformedURLException;
 
@@ -19,6 +20,8 @@ public interface WowApi extends BattlenetApiUrl {
     public String getApiPath();
 
     public String getJsonPayload(String url) throws MalformedURLException;
+
+    public WowBean getBeanPayload(String url) throws MalformedURLException ;
 
     public UrlConnectionReader getUrlConnectionReader();
 }

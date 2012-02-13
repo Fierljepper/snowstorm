@@ -7,6 +7,7 @@ import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetApiUrlImpl;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.url.UrlConnectionReader;
+import net.snowstorm.core.utils.ReflectionHelper;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.TransactionLayout;
 import net.snowstorm.gui.wow.components.CharacterProfileForm;
@@ -86,7 +87,7 @@ public class WowLayout extends VerticalLayout {
         apiButtonSelectLayout.addComponent(characterProfileButton);
         apiButtonSelectLayout.addComponent(realmStatusButton);
 
-
+        // add all the api selection buttons to a list
         apiSelectionButtons.add(realmStatusButton);
         apiSelectionButtons.add(characterProfileButton);
 
@@ -109,7 +110,10 @@ public class WowLayout extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 try {
                     form.commit();
-                    getTransactionLayout().setPayload(wowApi.getJsonPayload(wowApi.getUrl()));
+//                    getTransactionLayout().setPayload(wowApi.getJsonPayload(wowApi.getUrl()));
+                    getTransactionLayout().setPayload((new ReflectionHelper()).reflectMethodState(wowApi.getBeanPayload
+                            (wowApi.getUrl())
+                    ));
                     getTransactionLayout().setRequestPropertiesTable(wowApi.getUrlConnectionReader().getRequestProperties());
                     getTransactionLayout().setResponsePropertiesTable(wowApi.getUrlConnectionReader().getResponseProperties());
                 } catch (Exception e) {
@@ -143,14 +147,15 @@ public class WowLayout extends VerticalLayout {
             InputStream inputStream = null;
             try {
                 inputStream = urlConnectionReader.fetch(new URL(battlenetApiImpl.getUrl()));
-                JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-                Gson gson = new Gson();
-                Realms realms = gson.fromJson(reader, Realms.class);
-                for(Realm realm: realms.getRealms()){
-                    realmsList.add(realm);
+                if (inputStream != null){
+                    JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+                    Gson gson = new Gson();
+                    Realms realms = gson.fromJson(reader, Realms.class);
+                    for(Realm realm: realms.getRealms()){
+                        realmsList.add(realm);
+                    }
+                    regionRealmsMap.put(region, realmsList);
                 }
-                regionRealmsMap.put(region, realmsList);
-
             } catch (MalformedURLException e) {
                 LOG.error("Malformed URL", e);
             } catch (IOException e) {
@@ -158,7 +163,9 @@ public class WowLayout extends VerticalLayout {
             } finally {
                 urlConnectionReader.disconnect();
                 try {
-                    inputStream.close();
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
                 } catch (IOException e) {
                     LOG.error("Unable to close InputStream", e);
                 }
