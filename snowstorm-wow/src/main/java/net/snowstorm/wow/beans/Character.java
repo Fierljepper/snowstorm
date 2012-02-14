@@ -1,5 +1,7 @@
 package net.snowstorm.wow.beans;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -12,6 +14,7 @@ public class Character extends WowBean implements Serializable {
     private float lastModified;
     private String name;
     private String realm;
+    @SerializedName("class")
     private int clazz;
     private int race;
     private int gender;
