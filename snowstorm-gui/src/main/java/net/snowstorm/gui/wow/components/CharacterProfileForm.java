@@ -33,7 +33,7 @@ public class CharacterProfileForm extends Form {
 
     public CharacterProfileForm(BeanItem<CharacterProfile> characterProfileBeanItem){
         setCaption(WowLayout.CHARACTER_PROFILE_API_CAPTION);
-        layout = new GridLayout(4, 4);
+        layout = new GridLayout(2, 3);
         layout.setMargin(true, false, false, true);
         layout.setSpacing(true);
         setLayout(layout);
@@ -54,7 +54,7 @@ public class CharacterProfileForm extends Form {
         } else if (propertyId.equals("characterName")) {
             layout.addComponent(field, 0, 2);
         } else if (propertyId.equals("characterProfileFields")) {
-            layout.addComponent(field, 1, 0, 1, 3);
+            layout.addComponent(field, 1, 0, 1, 2);
         }
     }
 

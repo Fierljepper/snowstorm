@@ -110,8 +110,10 @@ public class WowLayout extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 try {
                     form.commit();
-//                    getTransactionLayout().setPayload(wowApi.getJsonPayload(wowApi.getUrl()));
-                    getTransactionLayout().setPayload((new ReflectionHelper()).reflectMethodState(wowApi.getBeanPayload
+                    // TODO fires request for each payload type: fire once
+                    getTransactionLayout().setJsonPayload(wowApi.getJsonPayload(wowApi.getUrl()));
+                    getTransactionLayout().setBeanPayload((new ReflectionHelper()).reflectMethodState(wowApi
+                            .getBeanPayload
                             (wowApi.getUrl())
                     ));
                     getTransactionLayout().setRequestPropertiesTable(wowApi.getUrlConnectionReader().getRequestProperties());

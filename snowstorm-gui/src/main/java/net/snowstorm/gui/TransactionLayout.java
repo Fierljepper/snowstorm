@@ -1,10 +1,8 @@
 package net.snowstorm.gui;
 
+import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 import java.util.List;
 import java.util.Map;
@@ -18,9 +16,13 @@ import java.util.Map;
  */
 public class TransactionLayout extends VerticalLayout {
 
+    private ClassResource JSON_ICON;
+//    public final ExternalResource D3_ICON_EXTERNAL_RESOURCE = new ExternalResource("http://us.battle.net/d3/static/local-common/images/favicons/d3.ico");
 
-    private Label payloadText;
-    private Table payloadTable = new Table();
+    private Label payloadBeanLabel;
+    private Label payloadXmlLabel;
+    private Label payloadJsonLabel;
+    private Accordion payloadAccordion = new Accordion();
     private Table requestPropertiesTable = new Table();
     private Table responsePropertiesTable = new Table();
     private HorizontalSplitPanel horizontalSplitPanel;
@@ -34,13 +36,20 @@ public class TransactionLayout extends VerticalLayout {
         horizontalSplitPanel.setLocked(false);
         addComponent(horizontalSplitPanel);
 
-        payloadTable.setSizeFull();
-        payloadTable.addContainerProperty("API Payload", Label.class, null);
-        horizontalSplitPanel.addComponent(payloadTable);
+        payloadAccordion.setSizeFull();
+        horizontalSplitPanel.addComponent(payloadAccordion);
 
-        payloadText = new Label();
-        payloadText.setContentMode(Label.CONTENT_PREFORMATTED);
-        payloadTable.addItem(new Object[]{payloadText}, null);
+        payloadBeanLabel = new Label();
+        payloadBeanLabel.setContentMode(Label.CONTENT_PREFORMATTED);
+        payloadAccordion.addTab(payloadBeanLabel, "API PAYLOAD AS BEAN");
+
+        payloadXmlLabel = new Label();
+        payloadXmlLabel.setContentMode(Label.CONTENT_PREFORMATTED);
+//        payloadAccordion.addTab(payloadXmlLabel, "API PAYLOAD AS XML");
+
+        payloadJsonLabel = new Label();
+        payloadJsonLabel.setContentMode(Label.CONTENT_PREFORMATTED);
+        payloadAccordion.addTab(payloadJsonLabel, "API PAYLOAD AS JSON", JSON_ICON);
 
         VerticalLayout requestResponseLayout = new com.vaadin.ui.VerticalLayout();
         requestResponseLayout.setSizeFull();
@@ -57,8 +66,16 @@ public class TransactionLayout extends VerticalLayout {
         requestResponseLayout.addComponent(responsePropertiesTable);
     }
 
-    public void setPayload(String payload){
-        payloadText.setValue(payload);
+    public void setBeanPayload(String beanPayload){
+        payloadBeanLabel.setValue(beanPayload);
+    }
+
+    public void setXmlPayload(String xmlPayload){
+        payloadXmlLabel.setValue(xmlPayload);
+    }
+
+    public void setJsonPayload(String jsonPayload){
+        payloadJsonLabel.setValue(jsonPayload);
     }
 
     public void setRequestPropertiesTable(Map<String, String> requestProperties) {
