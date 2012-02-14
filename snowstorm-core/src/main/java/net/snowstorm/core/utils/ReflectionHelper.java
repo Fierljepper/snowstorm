@@ -40,7 +40,10 @@ public class ReflectionHelper {
             String methodName = "";
             for (Method method: methods){
                 methodName = method.getName();
-                if (methodName.startsWith("get") && method.getParameterTypes().length <= 0 && !blackListedMethods
+                if (methodName.length() > 0 && (methodName.startsWith("get") || methodName.startsWith("is")) && method
+                        .getParameterTypes().length <=
+                        0 &&
+                        !blackListedMethods
                         .contains(methodName)){
                     try {
                         reflected += indent + methodName + " = " + method.invoke(object, null) + RETURN_LINEFEED;
