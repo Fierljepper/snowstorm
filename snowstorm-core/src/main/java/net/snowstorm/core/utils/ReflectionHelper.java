@@ -3,6 +3,7 @@ package net.snowstorm.core.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -16,7 +17,11 @@ import java.util.List;
 public class ReflectionHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReflectionHelper.class);
-    
+
+    public static final String RETURN_LINEFEED = "\n";
+
+    public static final String TAB = "\t";
+
     private static final List<String> blackListedMethods = new ArrayList<String>();
     
     static {
@@ -30,7 +35,7 @@ public class ReflectionHelper {
         String reflected = "";
         if (object != null){
             Class type = object.getClass();
-            reflected = indent + type.getSimpleName() + "\n";
+            reflected = indent + type.getSimpleName() + RETURN_LINEFEED;
             Method[] methods = type.getMethods();
             String methodName = "";
             for (Method method: methods){
@@ -38,13 +43,24 @@ public class ReflectionHelper {
                 if (methodName.startsWith("get") && method.getParameterTypes().length <= 0 && !blackListedMethods
                         .contains(methodName)){
                     try {
-                        reflected += indent + methodName + " = " + method.invoke(object, null) + "\n";
-                        Object returnTypeList = method.invoke(object, null);
-                        if (returnTypeList != null && returnTypeList instanceof Collection){
-                            indent += "\t";
-                            reflected += "\n";
-                            for (Object returnType: (Collection)returnTypeList){
-                                reflected += reflectMethodState(returnType);
+                        reflected += indent + methodName + " = " + method.invoke(object, null) + RETURN_LINEFEED;
+                        Object returnTypeIterable = method.invoke(object, null);
+                        if (returnTypeIterable != null){
+                            if (returnTypeIterable instanceof Collection){
+                                indent += TAB;
+                                reflected += RETURN_LINEFEED;
+                                for (Object returnType: (Collection)returnTypeIterable){
+                                    reflected += reflectMethodState(returnType);
+                                }
+                                // Primitive types return false for instanceof Object[]
+                            } else if (returnTypeIterable.getClass().isArray()){
+                                indent += TAB;
+                                reflected += RETURN_LINEFEED;
+                                for (int i = 0; i < Array.getLength(returnTypeIterable); i++){
+                                    Object returnType = Array.get(returnTypeIterable, i);
+                                    reflected += indent + returnType + RETURN_LINEFEED;
+//                                    reflected += reflectMethodState(returnType);
+                                }
                             }
                         }
                     } catch (IllegalAccessException e) {
@@ -55,6 +71,6 @@ public class ReflectionHelper {
                 }
             }
         }
-        return reflected + "\n";
+        return reflected + RETURN_LINEFEED;
     }
 }

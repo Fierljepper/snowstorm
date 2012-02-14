@@ -46,7 +46,7 @@ public class Character extends WowBean implements Serializable {
     public void setRealm(final String realm) {
         this.realm = realm;
     }
-
+    // TODO fix the class getter and setter
     public int getClazz() {
         return clazz;
     }
