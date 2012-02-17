@@ -3,6 +3,7 @@ package net.snowstorm.wow.beans;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -21,6 +22,10 @@ public class Character extends WowBean implements Serializable {
     private int level;
     private int achievementPoints;
     private String thumbnail;
+    private Guild guild;
+    private Stats stats;
+    private Collection<Talent> talents;
+
     private int[] quests;
 
     private UUID uuid = UUID.fromString("7b1d27b1-76b8-43b3-97b3-07759ae8a8d6");
@@ -96,6 +101,30 @@ public class Character extends WowBean implements Serializable {
 
     public void setThumbnail(final String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public Guild getGuild() {
+        return guild;
+    }
+
+    public void setGuild(final Guild guild) {
+        this.guild = guild;
+    }
+
+    public Stats getStats() {
+        return stats;
+    }
+
+    public void setStats(final Stats stats) {
+        this.stats = stats;
+    }
+
+    public Collection<Talent> getTalents() {
+        return talents;
+    }
+
+    public void setTalents(final Collection<Talent> talents) {
+        this.talents = talents;
     }
 
     public int[] getQuests() {

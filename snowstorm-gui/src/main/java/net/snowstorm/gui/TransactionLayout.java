@@ -37,6 +37,7 @@ public class TransactionLayout extends VerticalLayout {
         addComponent(horizontalSplitPanel);
 
         payloadAccordion.setSizeFull();
+
         horizontalSplitPanel.addComponent(payloadAccordion);
 
         payloadBeanLabel = new Label();
@@ -50,6 +51,7 @@ public class TransactionLayout extends VerticalLayout {
         payloadJsonLabel = new Label();
         payloadJsonLabel.setContentMode(Label.CONTENT_PREFORMATTED);
         payloadAccordion.addTab(payloadJsonLabel, "API PAYLOAD AS JSON", JSON_ICON);
+        payloadAccordion.setSelectedTab(payloadJsonLabel);
 
         VerticalLayout requestResponseLayout = new com.vaadin.ui.VerticalLayout();
         requestResponseLayout.setSizeFull();

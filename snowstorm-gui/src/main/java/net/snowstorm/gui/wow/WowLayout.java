@@ -113,9 +113,7 @@ public class WowLayout extends VerticalLayout {
                     // TODO fires request for each payload type: fire once
                     getTransactionLayout().setJsonPayload(wowApi.getJsonPayload(wowApi.getUrl()));
                     getTransactionLayout().setBeanPayload((new ReflectionHelper()).reflectMethodState(wowApi
-                            .getBeanPayload
-                            (wowApi.getUrl())
-                    ));
+                            .getBeanPayload(wowApi.getUrl())));
                     getTransactionLayout().setRequestPropertiesTable(wowApi.getUrlConnectionReader().getRequestProperties());
                     getTransactionLayout().setResponsePropertiesTable(wowApi.getUrlConnectionReader().getResponseProperties());
                 } catch (Exception e) {

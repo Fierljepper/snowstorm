@@ -18,24 +18,38 @@ public class ReflectionHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReflectionHelper.class);
 
+    public static final String PACKAGE_DOMAIN = "net.snowstorm";
+    
     public static final String RETURN_LINEFEED = "\n";
 
     public static final String TAB = "\t";
 
     private static final List<String> blackListedMethods = new ArrayList<String>();
     
-    static {
-        blackListedMethods.add("getClass");
-    }
-    
     private String indent = "";
     
-    @SuppressWarnings("all")
+    static {
+        blackListedMethods.add("getClass");
+        blackListedMethods.add("getBytes");
+        blackListedMethods.add("isEmpty");
+        blackListedMethods.add("isNaN");
+    }
+
     public String reflectMethodState(Object object){
+        return reflectMethodState(object, null);
+    }
+    
+    @SuppressWarnings("all")
+    private String reflectMethodState(Object object, Object parent){
         String reflected = "";
+
         if (object != null){
             Class type = object.getClass();
-            reflected = indent + type.getSimpleName() + RETURN_LINEFEED;
+            String fullClassQName = type.getName();
+            if (!fullClassQName.startsWith(PACKAGE_DOMAIN)){
+                return "";
+            }
+
             Method[] methods = type.getMethods();
             String methodName = "";
             for (Method method: methods){
@@ -46,23 +60,27 @@ public class ReflectionHelper {
                         !blackListedMethods
                         .contains(methodName)){
                     try {
-                        reflected += indent + methodName + " = " + method.invoke(object, null) + RETURN_LINEFEED;
+                        reflected +=  indent + methodName + " = " + method.invoke(object, null) + RETURN_LINEFEED;
                         Object returnTypeIterable = method.invoke(object, null);
-                        if (returnTypeIterable != null){
+                        if (returnTypeIterable != null && !returnTypeIterable.getClass().isPrimitive()){
                             if (returnTypeIterable instanceof Collection){
-                                indent += TAB;
-                                reflected += RETURN_LINEFEED;
                                 for (Object returnType: (Collection)returnTypeIterable){
-                                    reflected += reflectMethodState(returnType);
+                                    indent += TAB;
+                                    reflected += RETURN_LINEFEED + reflectMethodState(returnType, type);
                                 }
                                 // Primitive types return false for instanceof Object[]
                             } else if (returnTypeIterable.getClass().isArray()){
                                 indent += TAB;
-                                reflected += RETURN_LINEFEED;
                                 for (int i = 0; i < Array.getLength(returnTypeIterable); i++){
                                     Object returnType = Array.get(returnTypeIterable, i);
                                     reflected += indent + returnType + RETURN_LINEFEED;
-//                                    reflected += reflectMethodState(returnType);
+                                }
+                            }
+                            else {
+                                if(returnTypeIterable.getClass().getName().startsWith(PACKAGE_DOMAIN))
+                                {
+                                    indent += TAB;
+                                    reflected += reflectMethodState(returnTypeIterable, type);
                                 }
                             }
                         }
@@ -74,6 +92,8 @@ public class ReflectionHelper {
                 }
             }
         }
-        return reflected + RETURN_LINEFEED;
+        indent = indent.replaceFirst("\t", "");
+        return reflected;
     }
+
 }
