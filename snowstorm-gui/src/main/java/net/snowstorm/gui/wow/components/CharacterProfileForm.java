@@ -85,7 +85,7 @@ public class CharacterProfileForm extends Form {
             realmComboBox.setImmediate(true);
 
 
-            fieldsTwinColSelect.setRows(10);
+            fieldsTwinColSelect.setRows(8);
             fieldsTwinColSelect.setNullSelectionAllowed(true);
             fieldsTwinColSelect.setMultiSelect(true);
             fieldsTwinColSelect.setImmediate(true);

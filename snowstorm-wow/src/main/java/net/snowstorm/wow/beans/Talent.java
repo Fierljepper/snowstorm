@@ -1,12 +1,17 @@
 package net.snowstorm.wow.beans;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
 * Created by IntelliJ IDEA. User: developer Date: 2/16/12 Time: 11:46 PM To change this template use File | Settings |
 * File Templates.
 */
-public class Talent {
+public class Talent extends WowBean implements Serializable {
+
+    private UUID uuid = UUID.fromString("2c0b397c-53c4-46cb-be13-8e29e65eb2b6");
+
     private boolean selected;
     private String name;
     private String icon;
@@ -62,98 +67,8 @@ public class Talent {
         this.glyphs = glyphs;
     }
 
-    public class Tree {
-        private String points;
-        private int total;
-
-        public String getPoints() {
-            return points;
-        }
-
-        public void setPoints(final String points) {
-            this.points = points;
-        }
-
-        public int getTotal() {
-            return total;
-        }
-
-        public void setTotal(final int total) {
-            this.total = total;
-        }
+    @Override
+    public String toString(){
+        return getName();
     }
-
-
-    public class Glyphs {
-        private Collection<Glyph> prime;
-        private Collection<Glyph> major;
-        private Collection<Glyph> minor;
-
-        public Collection<Glyph> getPrime() {
-            return prime;
-        }
-
-        public void setPrime(final Collection<Glyph> prime) {
-            this.prime = prime;
-        }
-
-        public Collection<Glyph> getMajor() {
-            return major;
-        }
-
-        public void setMajor(final Collection<Glyph> major) {
-            this.major = major;
-        }
-
-        public Collection<Glyph> getMinor() {
-            return minor;
-        }
-
-        public void setMinor(final Collection<Glyph> minor) {
-            this.minor = minor;
-        }
-
-        public class Glyph {
-
-            private int glyph;
-            private int item;
-            private String name;
-            private String icon;
-
-            public int getGlyph() {
-                return glyph;
-            }
-
-            public void setGlyph(final int glyph) {
-                this.glyph = glyph;
-            }
-
-            public int getItem() {
-                return item;
-            }
-
-            public void setItem(final int item) {
-                this.item = item;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(final String name) {
-                this.name = name;
-            }
-
-            public String getIcon() {
-                return icon;
-            }
-
-            public void setIcon(final String icon) {
-                this.icon = icon;
-            }
-
-        }
-    }
-
-
 }

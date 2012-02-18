@@ -75,6 +75,7 @@ public class ReflectionHelper {
                                     Object returnType = Array.get(returnTypeIterable, i);
                                     reflected += indent + returnType + RETURN_LINEFEED;
                                 }
+                                indent = indent.replaceFirst("\t", "");
                             }
                             else {
                                 if(returnTypeIterable.getClass().getName().startsWith(PACKAGE_DOMAIN))

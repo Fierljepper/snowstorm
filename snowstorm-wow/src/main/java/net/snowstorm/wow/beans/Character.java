@@ -12,6 +12,8 @@ import java.util.UUID;
  */
 public class Character extends WowBean implements Serializable {
 
+    private UUID uuid = UUID.fromString("7b1d27b1-76b8-43b3-97b3-07759ae8a8d6");
+
     private float lastModified;
     private String name;
     private String realm;
@@ -25,11 +27,18 @@ public class Character extends WowBean implements Serializable {
     private Guild guild;
     private Stats stats;
     private Collection<Talent> talents;
-
+    private Items items;
+    private Collection<Reputation> reputation;
+    private Collection<Title> titles;
+    private Professions professions;
+    private Appearance appearance;
+    private int[] companions;
+    private int[] mounts;
+    private Collection<Pet> pets;
+    private Achievements achievements;
+    private Progression progression;
+    private Pvp pvp;
     private int[] quests;
-
-    private UUID uuid = UUID.fromString("7b1d27b1-76b8-43b3-97b3-07759ae8a8d6");
-
 
     public float getLastModified() {
         return lastModified;
@@ -127,11 +136,104 @@ public class Character extends WowBean implements Serializable {
         this.talents = talents;
     }
 
+    public Items getItems() {
+        return items;
+    }
+
+    public void setItems(final Items items) {
+        this.items = items;
+    }
+
+    public Collection<Reputation> getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(final Collection<Reputation> reputation) {
+        this.reputation = reputation;
+    }
+
+    public Collection<Title> getTitles() {
+        return titles;
+    }
+
+    public void setTitles(final Collection<Title> titles) {
+        this.titles = titles;
+    }
+
+    public Professions getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(final Professions professions) {
+        this.professions = professions;
+    }
+
+    public Appearance getAppearance() {
+        return appearance;
+    }
+
+    public void setAppearance(final Appearance appearance) {
+        this.appearance = appearance;
+    }
+
+    public int[] getCompanions() {
+        return companions;
+    }
+
+    public void setCompanions(final int[] companions) {
+        this.companions = companions;
+    }
+
+    public int[] getMounts() {
+        return mounts;
+    }
+
+    public void setMounts(final int[] mounts) {
+        this.mounts = mounts;
+    }
+
+    public Collection<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(final Collection<Pet> pets) {
+        this.pets = pets;
+    }
+
+    public Achievements getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(final Achievements achievements) {
+        this.achievements = achievements;
+    }
+
+    public Progression getProgression() {
+        return progression;
+    }
+
+    public void setProgression(final Progression progression) {
+        this.progression = progression;
+    }
+
+    public Pvp getPvp() {
+        return pvp;
+    }
+
+    public void setPvp(final Pvp pvp) {
+        this.pvp = pvp;
+    }
+
     public int[] getQuests() {
         return quests;
     }
 
     public void setQuests(final int[] quests) {
         this.quests = quests;
+    }
+
+    @Override
+    public String toString(){
+        return getName();
     }
 }

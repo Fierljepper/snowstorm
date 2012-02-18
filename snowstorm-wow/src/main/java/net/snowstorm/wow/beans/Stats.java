@@ -2,11 +2,16 @@ package net.snowstorm.wow.beans;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * Created by IntelliJ IDEA. User;
  * File Templates.
  */
-public class Stats {
+public class Stats extends WowBean implements Serializable {
+
+    private UUID uuid = UUID.fromString("063d42be-7ba9-4a5f-a7dc-0453b3bd29ba");
 
     private int health;
     private String powerType;
