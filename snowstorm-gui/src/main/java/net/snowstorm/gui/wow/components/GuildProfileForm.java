@@ -5,6 +5,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 import net.snowstorm.gui.wow.WowLayout;
 import net.snowstorm.wow.api.GuildProfileApi;
 import net.snowstorm.wow.api.GuildProfileApi.GuildProfileField;
@@ -70,7 +71,7 @@ public class GuildProfileForm extends Form {
             regionComboBox.setRequired(true);
             regionComboBox.setInputPrompt("Region");
             regionComboBox.setWidth("6em");
-            regionComboBox.addListener(new RegionComboboxValueChangeListener());
+            regionComboBox.addListener(new RegionComboboxValueChangeListener(wowLayout, realmComboBox, regionComboBox));
             for (BattlenetRegion regionValue: regionValues){
                 regionComboBox.addItem(regionValue);
             }
@@ -125,23 +126,5 @@ public class GuildProfileForm extends Form {
 
             return f;
         }
-
-        public class RegionComboboxValueChangeListener implements Property.ValueChangeListener {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                // Reset components
-                realmComboBox.removeAllItems();
-                BattlenetRegion battlenetRegion = (BattlenetRegion)regionComboBox.getValue();
-                if (battlenetRegion != null){
-                    List<Realm> realms =  wowLayout.regionRealmsMap.get(battlenetRegion);
-                    for (Realm realm: realms) {
-                        realmComboBox.addItem(realm);
-                        realmComboBox.setItemCaption(realm, realm.getName());
-                    }
-                }
-            }
-        }
     }
-
-
 }

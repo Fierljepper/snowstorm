@@ -5,6 +5,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 import net.snowstorm.gui.wow.WowLayout;
 import net.snowstorm.wow.api.RealmStatusApi;
 import net.snowstorm.wow.beans.Realm;
@@ -62,7 +63,7 @@ public class RealmStatusForm extends Form {
             regionComboBox.setRequired(true);
             regionComboBox.setInputPrompt("Region");
             regionComboBox.setWidth("6em");
-            regionComboBox.addListener(new RegionComboboxValueChangeListener());
+            regionComboBox.addListener(new RegionComboboxValueChangeListener(wowLayout, realmTwinColSelect, regionComboBox));
             for (BattlenetRegion regionValue: regionValues){
                 regionComboBox.addItem(regionValue);
             }
@@ -93,22 +94,6 @@ public class RealmStatusForm extends Form {
                 tf.setWidth("20em");
             }
             return f;
-        }
-
-        public class RegionComboboxValueChangeListener implements Property.ValueChangeListener {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                // Reset components
-                realmTwinColSelect.removeAllItems();
-                BattlenetRegion battlenetRegion = (BattlenetRegion)regionComboBox.getValue();
-                if (battlenetRegion != null){
-                    List<Realm> realms =  wowLayout.regionRealmsMap.get(battlenetRegion);
-                    for (Realm realm: realms) {
-                        realmTwinColSelect.addItem(realm);
-                        realmTwinColSelect.setItemCaption(realm, realm.getName());
-                    }
-                }
-            }
         }
     }
 }
