@@ -28,9 +28,9 @@ import java.util.UUID;
  * Time: 5:48 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi, Serializable {
+abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowApi, Serializable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WowApiImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractWowApi.class);
 
     private static transient String wowPath = "/wow";
 
@@ -38,11 +38,11 @@ abstract class WowApiImpl extends BattlenetApiUrlImpl implements WowApi, Seriali
 
     private UUID uuid = UUID.fromString("b043009c-93d6-438c-9bb6-1a76dd12bf7f");
 
-    public WowApiImpl(){
+    public AbstractWowApi(){
 
     }
 
-    public WowApiImpl(BattlenetRegion region) {
+    public AbstractWowApi(BattlenetRegion region) {
         super(region);
     }
 

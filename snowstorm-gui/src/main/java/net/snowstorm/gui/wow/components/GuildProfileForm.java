@@ -6,18 +6,18 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.CharacterProfileApi;
-import net.snowstorm.wow.api.CharacterProfileApi.CharacterProfileField;
+import net.snowstorm.wow.api.GuildProfileApi;
+import net.snowstorm.wow.api.GuildProfileApi.GuildProfileField;
 import net.snowstorm.wow.beans.Realm;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA. User: developer Date: 1/31/12 Time: 4:33 PM To change this template use File | Settings |
+ * Created by IntelliJ IDEA. User: developer Date: 4/14/12 Time: 10:11 AM To change this template use File | Settings |
  * File Templates.
  */
-public class CharacterProfileForm extends Form {
+public class GuildProfileForm extends Form {
 
     private static final String COMMON_FIELD_WIDTH = "12em";
 
@@ -30,19 +30,18 @@ public class CharacterProfileForm extends Form {
         wowLayout = (WowLayout) getParent();
     }
 
-
-    public CharacterProfileForm(BeanItem<CharacterProfileApi> characterProfileBeanItem){
-        setCaption(WowLayout.CHARACTER_PROFILE_API_CAPTION);
+    public GuildProfileForm(BeanItem<GuildProfileApi> guildProfileBeanItem){
+        setCaption(WowLayout.GUILD_PROFILE_API_CAPTION);
         layout = new GridLayout(2, 3);
         layout.setMargin(true, false, false, true);
         layout.setSpacing(true);
         setLayout(layout);
         setWriteThrough(false);
         setInvalidCommitted(false);
-        setFormFieldFactory(new CharacterProfileFieldFactory());
-        setItemDataSource(characterProfileBeanItem);
+        setFormFieldFactory(new GuildProfileFieldFactory());
+        setItemDataSource(guildProfileBeanItem);
         setVisibleItemProperties(Arrays.asList(new String[]{
-                "region", "realm", "characterName", "characterProfileFields"}));
+                "region", "realm", "guildName", "guildProfileFields"}));
     }
 
     @Override
@@ -51,23 +50,23 @@ public class CharacterProfileForm extends Form {
             layout.addComponent(field, 0, 0);
         } else if (propertyId.equals("realm")) {
             layout.addComponent(field, 0, 1);
-        } else if (propertyId.equals("characterName")) {
+        } else if (propertyId.equals("guildName")) {
             layout.addComponent(field, 0, 2);
-        } else if (propertyId.equals("characterProfileFields")) {
+        } else if (propertyId.equals("guildProfileFields")) {
             layout.addComponent(field, 1, 0, 1, 2);
         }
     }
 
-    private class CharacterProfileFieldFactory extends DefaultFieldFactory {
+    private class GuildProfileFieldFactory extends DefaultFieldFactory {
         final BattlenetRegion[] regionValues = BattlenetRegion.values();
-        final CharacterProfileField[] characterProfileFieldValues = CharacterProfileField.values();
+        final GuildProfileField[] guildProfileFieldValues = GuildProfileField.values();
 
         final ComboBox regionComboBox = new ComboBox("Region");
         final ComboBox realmComboBox = new ComboBox("Realm");
         final TwinColSelect fieldsTwinColSelect = new TwinColSelect();
-        final TextField characterNameTextField = new TextField("Character name");
+        final TextField guildNameTextField = new TextField("Guild name");
 
-        public CharacterProfileFieldFactory(){
+        public GuildProfileFieldFactory(){
             regionComboBox.setRequired(true);
             regionComboBox.setInputPrompt("Region");
             regionComboBox.setWidth("6em");
@@ -93,15 +92,15 @@ public class CharacterProfileForm extends Form {
             fieldsTwinColSelect.setRightColumnCaption("Selected fields");
             fieldsTwinColSelect.setWidth("30em");
             fieldsTwinColSelect.setMultiSelect(true);
-            for (CharacterProfileField characterProfileFieldValue:characterProfileFieldValues){
-                fieldsTwinColSelect.addItem(characterProfileFieldValue);
+            for (GuildProfileField guildProfileFieldValue:guildProfileFieldValues){
+                fieldsTwinColSelect.addItem(guildProfileFieldValue);
             }
 
-            characterNameTextField.setRequired(true);
-            characterNameTextField.setNullRepresentation("");
-            characterNameTextField.setInputPrompt("Character name");
-            characterNameTextField.setWidth(COMMON_FIELD_WIDTH);
-            characterNameTextField.setImmediate(true);
+            guildNameTextField.setRequired(true);
+            guildNameTextField.setNullRepresentation("");
+            guildNameTextField.setInputPrompt("Guild name");
+            guildNameTextField.setWidth(COMMON_FIELD_WIDTH);
+            guildNameTextField.setImmediate(true);
         }
 
         @Override
@@ -111,10 +110,10 @@ public class CharacterProfileForm extends Form {
                 return regionComboBox;
             } else if ("realm".equals(propertyId)) {
                 return realmComboBox;
-            } else if ("characterProfileFields".equals(propertyId)) {
+            } else if ("guildProfileFields".equals(propertyId)) {
                 return fieldsTwinColSelect;
-            } else if("characterName".equals(propertyId)) {
-                return characterNameTextField;
+            } else if("guildName".equals(propertyId)) {
+                return guildNameTextField;
             } else {
                 f = super.createField(item, propertyId, uiContext);
             }
@@ -143,4 +142,6 @@ public class CharacterProfileForm extends Form {
             }
         }
     }
+
+
 }

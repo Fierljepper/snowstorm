@@ -11,12 +11,14 @@ import net.snowstorm.core.utils.ReflectionHelper;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.TransactionLayout;
 import net.snowstorm.gui.wow.components.CharacterProfileForm;
+import net.snowstorm.gui.wow.components.GuildProfileForm;
 import net.snowstorm.gui.wow.components.RealmStatusForm;
 import net.snowstorm.wow.WowApi;
-import net.snowstorm.wow.api.CharacterProfile;
-import net.snowstorm.wow.api.RealmStatus;
+import net.snowstorm.wow.api.CharacterProfileApi;
+import net.snowstorm.wow.api.GuildProfileApi;
+import net.snowstorm.wow.api.RealmStatusApi;
 import net.snowstorm.wow.beans.Realm;
-import net.snowstorm.wow.beans.Realms;
+import net.snowstorm.wow.beans.RealmStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +45,7 @@ public class WowLayout extends VerticalLayout {
 
     public static final String REALM_STATUS_API_CAPTION = "Realm Status API";
     public static final String CHARACTER_PROFILE_API_CAPTION = "Character Profile API";
+    public static final String GUILD_PROFILE_API_CAPTION = "Guild Profile API";
 
     private static final BattlenetRegion[] regionValues = BattlenetRegion.values();
     public static final Map<BattlenetRegion, List<Realm>> regionRealmsMap = new HashMap<BattlenetRegion, List<Realm>>();
@@ -54,6 +57,7 @@ public class WowLayout extends VerticalLayout {
 
     private Button realmStatusButton;
     private Button characterProfileButton;
+    private Button guildProfileButton;
 
     WowApi wowApi;
 
@@ -83,13 +87,16 @@ public class WowLayout extends VerticalLayout {
         ApiSelectButtonClickListener apiSelectButtonClickListener = new ApiSelectButtonClickListener();
         characterProfileButton = new Button(CHARACTER_PROFILE_API_CAPTION, apiSelectButtonClickListener);
         characterProfileButton.setEnabled(false);
+        guildProfileButton = new Button(GUILD_PROFILE_API_CAPTION, apiSelectButtonClickListener);
         realmStatusButton = new Button(REALM_STATUS_API_CAPTION, apiSelectButtonClickListener);
         apiButtonSelectLayout.addComponent(characterProfileButton);
+        apiButtonSelectLayout.addComponent(guildProfileButton);
         apiButtonSelectLayout.addComponent(realmStatusButton);
 
         // add all the api selection buttons to a list
-        apiSelectionButtons.add(realmStatusButton);
         apiSelectionButtons.add(characterProfileButton);
+        apiSelectionButtons.add(guildProfileButton);
+        apiSelectionButtons.add(realmStatusButton);
 
         apiSwitcher(CHARACTER_PROFILE_API_CAPTION);
         addComponent(form);
@@ -139,7 +146,7 @@ public class WowLayout extends VerticalLayout {
     }
 
     private static void fillRegionRealmsMap(){
-        BattlenetApiUrlImpl battlenetApiImpl = new RealmStatus();
+        BattlenetApiUrlImpl battlenetApiImpl = new RealmStatusApi();
         UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
         for(BattlenetRegion region: regionValues){
             List<Realm> realmsList = new ArrayList<Realm>();
@@ -150,7 +157,7 @@ public class WowLayout extends VerticalLayout {
                 if (inputStream != null){
                     JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
                     Gson gson = new Gson();
-                    Realms realms = gson.fromJson(reader, Realms.class);
+                    RealmStatus realms = gson.fromJson(reader, RealmStatus.class);
                     for(Realm realm: realms.getRealms()){
                         realmsList.add(realm);
                     }
@@ -185,12 +192,17 @@ public class WowLayout extends VerticalLayout {
     private void apiSwitcher(String apiCaption){
         Form form = new Form();
         if (REALM_STATUS_API_CAPTION.equals(apiCaption)){
-            wowApi = new RealmStatus();
-            BeanItem<RealmStatus> realmStatusBeanItem = new BeanItem<RealmStatus>((RealmStatus)wowApi);
+            wowApi = new RealmStatusApi();
+            BeanItem<RealmStatusApi> realmStatusBeanItem = new BeanItem<RealmStatusApi>((RealmStatusApi)wowApi);
             form = new RealmStatusForm(realmStatusBeanItem);
+        } else if (GUILD_PROFILE_API_CAPTION.equals(apiCaption)){
+            wowApi = new GuildProfileApi();
+            BeanItem<GuildProfileApi> guildProfileBeanItem = new BeanItem<GuildProfileApi>((GuildProfileApi)
+                    wowApi);
+            form = new GuildProfileForm(guildProfileBeanItem);
         } else if (CHARACTER_PROFILE_API_CAPTION.equals(apiCaption)){
-            wowApi = new CharacterProfile();
-            BeanItem<CharacterProfile> characterProfileBeanItem = new BeanItem<CharacterProfile>((CharacterProfile)wowApi);
+            wowApi = new CharacterProfileApi();
+            BeanItem<CharacterProfileApi> characterProfileBeanItem = new BeanItem<CharacterProfileApi>((CharacterProfileApi)wowApi);
             form = new CharacterProfileForm(characterProfileBeanItem);
         }
 

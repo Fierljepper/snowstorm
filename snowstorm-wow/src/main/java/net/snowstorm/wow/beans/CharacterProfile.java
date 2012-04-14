@@ -10,11 +10,11 @@ import java.util.UUID;
  * Created by IntelliJ IDEA. User: developer Date: 1/31/12 Time: 4:23 PM To change this template use File | Settings |
  * File Templates.
  */
-public class Character extends WowBean implements Serializable {
+public class CharacterProfile extends WowBean implements Serializable {
 
     private UUID uuid = UUID.fromString("7b1d27b1-76b8-43b3-97b3-07759ae8a8d6");
 
-    private float lastModified;
+    private long lastModified;
     private String name;
     private String realm;
     @SerializedName("class")
@@ -40,11 +40,11 @@ public class Character extends WowBean implements Serializable {
     private Pvp pvp;
     private int[] quests;
 
-    public float getLastModified() {
+    public long getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(final float lastModified) {
+    public void setLastModified(final long lastModified) {
         this.lastModified = lastModified;
     }
 
