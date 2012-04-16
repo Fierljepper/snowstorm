@@ -1,17 +1,14 @@
 package net.snowstorm.gui.wow.components;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.RealmStatusApi;
-import net.snowstorm.wow.beans.Realm;
+import net.snowstorm.wow.api.RealmStatus;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: developer Date: 1/28/12 Time: 10:20 PM To change this template use File | Settings |
@@ -28,7 +25,7 @@ public class RealmStatusForm extends Form {
         wowLayout = (WowLayout) getParent();
     }
 
-    public RealmStatusForm(BeanItem<RealmStatusApi> realmStatusBeanItem){
+    public RealmStatusForm(BeanItem<RealmStatus> realmStatusBeanItem){
 
         setCaption(WowLayout.REALM_STATUS_API_CAPTION);
         layout = new GridLayout(3, 3);

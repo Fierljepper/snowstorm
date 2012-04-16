@@ -1,18 +1,15 @@
 package net.snowstorm.gui.wow.components;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.CharacterProfileApi;
-import net.snowstorm.wow.api.CharacterProfileApi.CharacterProfileField;
-import net.snowstorm.wow.beans.Realm;
+import net.snowstorm.wow.api.CharacterProfile;
+import net.snowstorm.wow.api.CharacterProfile.CharacterProfileField;
 import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: developer Date: 1/31/12 Time: 4:33 PM To change this template use File | Settings |
@@ -32,7 +29,7 @@ public class CharacterProfileForm extends Form {
     }
 
 
-    public CharacterProfileForm(BeanItem<CharacterProfileApi> characterProfileBeanItem){
+    public CharacterProfileForm(BeanItem<CharacterProfile> characterProfileBeanItem){
         setCaption(WowLayout.CHARACTER_PROFILE_API_CAPTION);
         layout = new GridLayout(2, 3);
         layout.setMargin(true, false, false, true);

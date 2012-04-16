@@ -4,7 +4,7 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import net.snowstorm.core.url.BattlenetRegion;
-import net.snowstorm.wow.beans.Realm;
+import net.snowstorm.wow.beans.realmresources.Realm;
 
 import java.util.List;
 
