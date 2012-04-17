@@ -1,4 +1,4 @@
-package net.snowstorm.wow.beans.currentauctions;
+package net.snowstorm.wow.beans.auctionresources;
 
 import net.snowstorm.wow.beans.WowBean;
 

@@ -6,8 +6,8 @@ import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.GuildProfile;
-import net.snowstorm.wow.api.GuildProfile.GuildProfileField;
+import net.snowstorm.wow.api.guildresources.GuildProfileApi;
+import net.snowstorm.wow.api.guildresources.GuildProfileApi.GuildProfileField;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ public class GuildProfileForm extends Form {
         wowLayout = (WowLayout) getParent();
     }
 
-    public GuildProfileForm(BeanItem<GuildProfile> guildProfileBeanItem){
+    public GuildProfileForm(BeanItem<GuildProfileApi> guildProfileBeanItem){
         setCaption(WowLayout.GUILD_PROFILE_API_CAPTION);
         layout = new GridLayout(2, 3);
         layout.setMargin(true, false, false, true);

@@ -8,6 +8,7 @@ import net.snowstorm.core.url.BattlenetApiUrlImpl;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.core.utils.ReflectionHelper;
+import net.snowstorm.core.utils.UrlConnectionHelper;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.TransactionLayout;
 import net.snowstorm.gui.wow.components.CharacterProfileForm;
@@ -15,12 +16,18 @@ import net.snowstorm.gui.wow.components.CurrentAuctionsForm;
 import net.snowstorm.gui.wow.components.GuildProfileForm;
 import net.snowstorm.gui.wow.components.RealmStatusForm;
 import net.snowstorm.wow.WowApi;
-import net.snowstorm.wow.api.*;
-import net.snowstorm.wow.beans.currentauctions.File;
+import net.snowstorm.wow.api.auctionresources.CurrentAuctionsApi;
+import net.snowstorm.wow.api.auctionresources.CurrentAuctionsDataApi;
+import net.snowstorm.wow.api.characterresources.CharacterProfileApi;
+import net.snowstorm.wow.api.guildresources.GuildProfileApi;
+import net.snowstorm.wow.api.realmresources.RealmStatusApi;
+import net.snowstorm.wow.beans.auctionresources.CurrentAuctionsData;
+import net.snowstorm.wow.beans.auctionresources.File;
 import net.snowstorm.wow.beans.realmresources.Realm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -122,15 +129,22 @@ public class WowLayout extends VerticalLayout {
 
         Button submit = new Button("Submit", new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
+                // Persist the form data to the wowApi
+                form.commit();
+
+                UrlConnectionHelper urlConnectionHelper = new UrlConnectionHelper();
+                String apiUrl = wowApi.getUrl();
+                byte [] bytes = urlConnectionHelper.urlPayloadToByteArray(apiUrl);
+
                 try {
-                    form.commit();
-                    // TODO fires request for each payload type: fire once
-                    if (wowApi instanceof CurrentAuctions){
-                        File[] files = ((CurrentAuctions) wowApi).getBeanPayload(wowApi.getUrl()).getFiles();
+                    if (wowApi instanceof CurrentAuctionsApi){
+                        File[] files = ((CurrentAuctionsApi) wowApi).getBeanPayload(new ByteArrayInputStream(bytes)).getFiles();
                         String url = files[0].getUrl();
                         if (url!= null){
-                            net.snowstorm.wow.api.CurrentAuctionsData currentAuctionsData = new net.snowstorm.wow.api.CurrentAuctionsData();
-                            net.snowstorm.wow.beans.auctionresources.CurrentAuctionsData auctionsData  = currentAuctionsData.getBeanPayload(url);
+                            byte[] auctionDataBytes = urlConnectionHelper.urlPayloadToByteArray(url);
+                            CurrentAuctionsDataApi currentAuctionsDataApi = new CurrentAuctionsDataApi();
+                            CurrentAuctionsData auctionsData  = currentAuctionsDataApi.getBeanPayload(new ByteArrayInputStream(auctionDataBytes));
+
                             int noAllianceAuc = auctionsData.getAlliance().getAuctions().length;
                             int noHordeAuc = auctionsData.getHorde().getAuctions().length;
                             int noNeutralAuc = auctionsData.getNeutral().getAuctions().length;
@@ -139,22 +153,22 @@ public class WowLayout extends VerticalLayout {
                             getTransactionLayout().setBeanPayload("DATASET TO LARGE TO REFLECT!" +
                                     "\n\nNumber of auctions on " + auctionsData.getRealm().getName() +
                                     "\n==========================================" +
-                                    "\nAlliance: " +Integer.toString(noAllianceAuc) +
-                                    "\nHorde: " +Integer.toString(noHordeAuc) +
-                                    "\nNeutral: " +Integer.toString(noNeutralAuc) +
+                                    "\nAlliance: " + Integer.toString(noAllianceAuc) +
+                                    "\nHorde: " + Integer.toString(noHordeAuc) +
+                                    "\nNeutral: " + Integer.toString(noNeutralAuc) +
                                     "\n==========================================" +
                                     "\nTotal: " + Integer.toString(totalAuc)
                             );
-                            getTransactionLayout().setJsonPayload(currentAuctionsData.getJsonPayload(url));
+                            getTransactionLayout().setJsonPayload(currentAuctionsDataApi.getJsonPayload(new ByteArrayInputStream(auctionDataBytes)));
                         }
                     } else {
-                        getTransactionLayout().setJsonPayload(wowApi.getJsonPayload(wowApi.getUrl()));
+                        getTransactionLayout().setJsonPayload(wowApi.getJsonPayload(new ByteArrayInputStream(bytes)));
                         getTransactionLayout().setBeanPayload((new ReflectionHelper()).reflectMethodState(wowApi
-                                .getBeanPayload(wowApi.getUrl())));
+                                .getBeanPayload(new ByteArrayInputStream(bytes))));
                     }
                     // Set the header tables
-                    getTransactionLayout().setRequestPropertiesTable(wowApi.getUrlConnectionReader().getRequestProperties());
-                    getTransactionLayout().setResponsePropertiesTable(wowApi.getUrlConnectionReader().getResponseProperties());
+                    getTransactionLayout().setRequestPropertiesTable(urlConnectionHelper.getUrlConnectionReader().getRequestProperties());
+                    getTransactionLayout().setResponsePropertiesTable(urlConnectionHelper.getUrlConnectionReader().getResponseProperties());
                 } catch (Exception e) {
                     LOG.error("Catch all: ", e);
                 }
@@ -178,7 +192,7 @@ public class WowLayout extends VerticalLayout {
     }
 
     private static void fillRegionRealmsMap(){
-        BattlenetApiUrlImpl battlenetApiImpl = new net.snowstorm.wow.api.RealmStatus();
+        BattlenetApiUrlImpl battlenetApiImpl = new RealmStatusApi();
         UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
         for(BattlenetRegion region: regionValues){
             List<Realm> realmsList = new ArrayList<Realm>();
@@ -224,22 +238,22 @@ public class WowLayout extends VerticalLayout {
     private void apiSwitcher(String apiCaption){
         Form form = new Form();
         if (CHARACTER_PROFILE_API_CAPTION.equals(apiCaption)){
-            wowApi = new CharacterProfile();
-            BeanItem<CharacterProfile> characterProfileBeanItem = new BeanItem<CharacterProfile>((CharacterProfile)wowApi);
+            wowApi = new CharacterProfileApi();
+            BeanItem<CharacterProfileApi> characterProfileBeanItem = new BeanItem<CharacterProfileApi>((CharacterProfileApi)wowApi);
             form = new CharacterProfileForm(characterProfileBeanItem);
         } else if (CURRENT_AUCTIONS_API_CAPTION.equals(apiCaption)){
-            wowApi = new CurrentAuctions();
-            BeanItem<CurrentAuctions> currentAuctionsBeanItem = new BeanItem<CurrentAuctions>((CurrentAuctions)
+            wowApi = new CurrentAuctionsApi();
+            BeanItem<CurrentAuctionsApi> currentAuctionsBeanItem = new BeanItem<CurrentAuctionsApi>((CurrentAuctionsApi)
                     wowApi);
             form = new CurrentAuctionsForm(currentAuctionsBeanItem);
         } else if (GUILD_PROFILE_API_CAPTION.equals(apiCaption)){
-            wowApi = new GuildProfile();
-            BeanItem<GuildProfile> guildProfileBeanItem = new BeanItem<GuildProfile>((GuildProfile)
+            wowApi = new GuildProfileApi();
+            BeanItem<GuildProfileApi> guildProfileBeanItem = new BeanItem<GuildProfileApi>((GuildProfileApi)
                     wowApi);
             form = new GuildProfileForm(guildProfileBeanItem);
         } else if (REALM_STATUS_API_CAPTION.equals(apiCaption)){
-            wowApi = new net.snowstorm.wow.api.RealmStatus();
-            BeanItem<net.snowstorm.wow.api.RealmStatus> realmStatusBeanItem = new BeanItem<net.snowstorm.wow.api.RealmStatus>((net.snowstorm.wow.api.RealmStatus)wowApi);
+            wowApi = new RealmStatusApi();
+            BeanItem<RealmStatusApi> realmStatusBeanItem = new BeanItem<RealmStatusApi>((RealmStatusApi)wowApi);
             form = new RealmStatusForm(realmStatusBeanItem);
         }
 

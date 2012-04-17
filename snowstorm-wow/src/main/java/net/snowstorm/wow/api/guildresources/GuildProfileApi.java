@@ -1,9 +1,12 @@
-package net.snowstorm.wow.api;
+package net.snowstorm.wow.api.guildresources;
 
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.utils.StringHelper;
+import net.snowstorm.wow.api.AbstractWowApi;
+import net.snowstorm.wow.beans.guildresources.GuildProfile;
 import net.snowstorm.wow.beans.realmresources.Realm;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Collection;
@@ -13,7 +16,7 @@ import java.util.UUID;
  * Created by IntelliJ IDEA. User: developer Date: 2/18/12 Time: 6:41 PM To change this template use File | Settings |
  * File Templates.
  */
-public class GuildProfile extends AbstractWowApi implements Serializable {
+public class GuildProfileApi extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("96746417-2a98-4757-b2a4-264c56d15ab4");
 
@@ -28,11 +31,11 @@ public class GuildProfile extends AbstractWowApi implements Serializable {
     private Collection<GuildProfileField> guildProfileFields;
 
 
-    public GuildProfile(){
+    public GuildProfileApi(){
 
     }
 
-    public GuildProfile(BattlenetRegion region, Realm realm, String guildName){
+    public GuildProfileApi(BattlenetRegion region, Realm realm, String guildName){
         super(region);
         this.realm = realm;
         this.guildName = guildName;
@@ -44,7 +47,7 @@ public class GuildProfile extends AbstractWowApi implements Serializable {
     }
 
     public static void setFieldsParameter(final String fieldsParameter) {
-        net.snowstorm.wow.api.GuildProfile.fieldsParameter = fieldsParameter;
+        GuildProfileApi.fieldsParameter = fieldsParameter;
     }
 
     public Realm getRealm() {
@@ -93,8 +96,13 @@ public class GuildProfile extends AbstractWowApi implements Serializable {
     }
 
     @Override
-    public net.snowstorm.wow.beans.guildresources.GuildProfile getBeanPayload(final String url) throws MalformedURLException {
-        return  (net.snowstorm.wow.beans.guildresources.GuildProfile)getBeanPayload(url, net.snowstorm.wow.beans.guildresources.GuildProfile.class);
+    public GuildProfile getBeanPayload(final String url) throws MalformedURLException {
+        return  (GuildProfile)getBeanPayload(url, GuildProfile.class);
+    }
+
+    @Override
+    public GuildProfile getBeanPayload(final InputStream inputStream) {
+        return  (GuildProfile)getBeanPayload(inputStream, GuildProfile.class);
     }
 
     public enum GuildProfileField{

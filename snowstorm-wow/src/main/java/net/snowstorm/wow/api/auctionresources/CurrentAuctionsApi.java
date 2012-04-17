@@ -1,8 +1,11 @@
-package net.snowstorm.wow.api;
+package net.snowstorm.wow.api.auctionresources;
 
 import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.wow.api.AbstractWowApi;
+import net.snowstorm.wow.beans.auctionresources.CurrentAuctions;
 import net.snowstorm.wow.beans.realmresources.Realm;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.UUID;
@@ -11,7 +14,7 @@ import java.util.UUID;
  * Created with IntelliJ IDEA. User: developer Date: 4/14/12 Time: 4:40 PM To change this template use File | Settings |
  * File Templates.
  */
-public class CurrentAuctions extends AbstractWowApi implements Serializable {
+public class CurrentAuctionsApi extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("6426953f-01fc-41c7-9f80-02c3c8c4bf19");
 
@@ -19,11 +22,11 @@ public class CurrentAuctions extends AbstractWowApi implements Serializable {
 
     private Realm realm;
 
-    public CurrentAuctions(){
+    public CurrentAuctionsApi(){
 
     }
 
-    public CurrentAuctions(BattlenetRegion region, Realm realm){
+    public CurrentAuctionsApi(BattlenetRegion region, Realm realm){
         super(region);
         this.realm = realm;
     }
@@ -51,7 +54,12 @@ public class CurrentAuctions extends AbstractWowApi implements Serializable {
     }
 
     @Override
-    public net.snowstorm.wow.beans.currentauctions.CurrentAuctions getBeanPayload(final String url) throws MalformedURLException {
-        return (net.snowstorm.wow.beans.currentauctions.CurrentAuctions) getBeanPayload(url, net.snowstorm.wow.beans.currentauctions.CurrentAuctions.class);
+    public CurrentAuctions getBeanPayload(final String url) throws MalformedURLException {
+        return (CurrentAuctions) getBeanPayload(url, CurrentAuctions.class);
+    }
+
+    @Override
+    public CurrentAuctions getBeanPayload(final InputStream inputStream) {
+        return (CurrentAuctions) getBeanPayload(inputStream, CurrentAuctions.class);
     }
 }

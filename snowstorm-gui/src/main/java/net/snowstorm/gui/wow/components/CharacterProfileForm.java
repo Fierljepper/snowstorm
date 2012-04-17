@@ -5,8 +5,8 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.CharacterProfile;
-import net.snowstorm.wow.api.CharacterProfile.CharacterProfileField;
+import net.snowstorm.wow.api.characterresources.CharacterProfileApi;
+import net.snowstorm.wow.api.characterresources.CharacterProfileApi.CharacterProfileField;
 import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class CharacterProfileForm extends Form {
     }
 
 
-    public CharacterProfileForm(BeanItem<CharacterProfile> characterProfileBeanItem){
+    public CharacterProfileForm(BeanItem<CharacterProfileApi> characterProfileBeanItem){
         setCaption(WowLayout.CHARACTER_PROFILE_API_CAPTION);
         layout = new GridLayout(2, 3);
         layout.setMargin(true, false, false, true);

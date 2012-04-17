@@ -6,7 +6,7 @@ import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.CurrentAuctions;
+import net.snowstorm.wow.api.auctionresources.CurrentAuctionsApi;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class CurrentAuctionsForm extends Form {
         wowLayout = (WowLayout) getParent();
     }
 
-    public CurrentAuctionsForm(BeanItem<CurrentAuctions> currentAuctionsBeanItem){
+    public CurrentAuctionsForm(BeanItem<CurrentAuctionsApi> currentAuctionsBeanItem){
         setCaption(WowLayout.CURRENT_AUCTIONS_API_CAPTION);
         layout = new GridLayout(1, 3);
         layout.setMargin(true, false, false, true);

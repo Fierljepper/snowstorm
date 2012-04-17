@@ -28,7 +28,7 @@ import java.util.UUID;
  * Time: 5:48 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowApi, Serializable {
+public abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowApi, Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractWowApi.class);
 
@@ -69,14 +69,36 @@ abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowApi, Ser
 
 
     // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload
+    // Convenience method
     @Override
     public String getJsonPayload(String url) throws MalformedURLException {
         InputStream inputStream = urlConnectionReader.fetch(new URL(url));
+        return getJsonPayload(inputStream);
+    }
+
+    // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload
+    @Override
+    public String getJsonPayload(InputStream inputStream){
         if (inputStream != null){
             JsonReader reader = getJsonReader(inputStream, "UTF-8");
             return prettyPrint(reader);
         }
-        return String.valueOf(urlConnectionReader.getResponseCode());
+        return null;
+    }
+
+    // Convenience method
+    public WowBean getBeanPayload(String url, Class type) throws MalformedURLException {
+        InputStream inputStream = urlConnectionReader.fetch(new URL(url));
+        return getBeanPayload(inputStream, type);
+    }
+
+    public WowBean getBeanPayload(InputStream inputStream, Class type){
+        if (inputStream != null){
+            JsonReader reader = getJsonReader(inputStream, "UTF-8");
+            Gson gson = new Gson();
+            return gson.fromJson(reader, type);
+        }
+        return null;
     }
 
     // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload
@@ -90,15 +112,6 @@ abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowApi, Ser
         return reader;
     }
 
-    public WowBean getBeanPayload(String url, Class type) throws MalformedURLException {
-        InputStream inputStream = urlConnectionReader.fetch(new URL(url));
-        if (inputStream != null){
-            JsonReader reader = getJsonReader(inputStream, "UTF-8");
-            Gson gson = new Gson();
-            return gson.fromJson(reader, type);
-        }
-        return null;
-    }
 
     // TODO move to snowstorm-core if API's from other Blizz games deliver a JSON payload
     private String prettyPrint(JsonReader reader) {

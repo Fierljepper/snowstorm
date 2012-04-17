@@ -6,7 +6,7 @@ import com.vaadin.ui.*;
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.gui.wow.RegionComboboxValueChangeListener;
 import net.snowstorm.gui.wow.WowLayout;
-import net.snowstorm.wow.api.RealmStatus;
+import net.snowstorm.wow.api.realmresources.RealmStatusApi;
 
 import java.util.Arrays;
 
@@ -25,7 +25,7 @@ public class RealmStatusForm extends Form {
         wowLayout = (WowLayout) getParent();
     }
 
-    public RealmStatusForm(BeanItem<RealmStatus> realmStatusBeanItem){
+    public RealmStatusForm(BeanItem<RealmStatusApi> realmStatusBeanItem){
 
         setCaption(WowLayout.REALM_STATUS_API_CAPTION);
         layout = new GridLayout(3, 3);

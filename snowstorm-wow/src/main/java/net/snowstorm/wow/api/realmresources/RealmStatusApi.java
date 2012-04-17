@@ -1,8 +1,11 @@
-package net.snowstorm.wow.api;
+package net.snowstorm.wow.api.realmresources;
 
 import net.snowstorm.core.url.BattlenetRegion;
+import net.snowstorm.wow.api.AbstractWowApi;
 import net.snowstorm.wow.beans.realmresources.Realm;
+import net.snowstorm.wow.beans.realmresources.RealmStatus;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Collection;
@@ -15,7 +18,7 @@ import java.util.UUID;
  * Time: 5:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RealmStatus extends AbstractWowApi implements Serializable {
+public class RealmStatusApi extends AbstractWowApi implements Serializable {
 
     private String apiPath = "/realm/status";
 
@@ -25,11 +28,11 @@ public class RealmStatus extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("a48adaaf-a360-4bb7-952c-69aba971efe7");
 
-    public RealmStatus(){
+    public RealmStatusApi(){
 
     }
 
-    public RealmStatus(BattlenetRegion region) {
+    public RealmStatusApi(BattlenetRegion region) {
         super(region);
     }
 
@@ -66,8 +69,13 @@ public class RealmStatus extends AbstractWowApi implements Serializable {
     }
 
     @Override
-    public net.snowstorm.wow.beans.realmresources.RealmStatus getBeanPayload(String url) throws MalformedURLException {
-        return (net.snowstorm.wow.beans.realmresources.RealmStatus) getBeanPayload(url, net.snowstorm.wow.beans.realmresources.RealmStatus.class);
+    public RealmStatus getBeanPayload(String url) throws MalformedURLException {
+        return (RealmStatus) getBeanPayload(url, RealmStatus.class);
+    }
+
+    @Override
+    public RealmStatus getBeanPayload(final InputStream inputStream) {
+        return (RealmStatus) getBeanPayload(inputStream, RealmStatus.class);
     }
 
 }

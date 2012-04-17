@@ -1,9 +1,12 @@
-package net.snowstorm.wow.api;
+package net.snowstorm.wow.api.characterresources;
 
 import net.snowstorm.core.url.BattlenetRegion;
 import net.snowstorm.core.utils.StringHelper;
+import net.snowstorm.wow.api.AbstractWowApi;
+import net.snowstorm.wow.beans.characterresources.CharacterProfile;
 import net.snowstorm.wow.beans.realmresources.Realm;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Collection;
@@ -13,7 +16,7 @@ import java.util.UUID;
  * Created by IntelliJ IDEA. User: developer Date: 1/31/12 Time: 3:07 PM To change this template use File | Settings |
  * File Templates.
  */
-public class CharacterProfile extends AbstractWowApi implements Serializable {
+public class CharacterProfileApi extends AbstractWowApi implements Serializable {
 
 
 
@@ -29,11 +32,11 @@ public class CharacterProfile extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("46fc7341-fb6c-4413-b07c-c0272aafe4cf");
     
-    public CharacterProfile(){
+    public CharacterProfileApi(){
         
     }
 
-    public CharacterProfile(BattlenetRegion region, Realm realm, String characterName){
+    public CharacterProfileApi(BattlenetRegion region, Realm realm, String characterName){
         super(region);
         this.realm = realm;
         this.characterName = characterName;
@@ -75,7 +78,6 @@ public class CharacterProfile extends AbstractWowApi implements Serializable {
     @Override
     public String getUrl() {
         String fieldsParameter = "";
-        // FIXME Not the most efficient
         // fields
         if (characterProfileFields != null && characterProfileFields.size() > 0){
             fieldsParameter = this.fieldsParameter;
@@ -92,8 +94,13 @@ public class CharacterProfile extends AbstractWowApi implements Serializable {
 
 
     @Override
-    public net.snowstorm.wow.beans.characterresources.CharacterProfile getBeanPayload(String url) throws MalformedURLException {
-        return (net.snowstorm.wow.beans.characterresources.CharacterProfile) getBeanPayload(url, net.snowstorm.wow.beans.characterresources.CharacterProfile.class);
+    public CharacterProfile getBeanPayload(String url) throws MalformedURLException {
+        return (CharacterProfile) getBeanPayload(url, CharacterProfile.class);
+    }
+
+    @Override
+    public CharacterProfile getBeanPayload(final InputStream inputStream) {
+        return (CharacterProfile) getBeanPayload(inputStream, CharacterProfile.class);
     }
 
     public enum CharacterProfileField {
