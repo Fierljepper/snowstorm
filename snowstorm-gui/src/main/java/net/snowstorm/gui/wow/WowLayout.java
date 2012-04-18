@@ -11,15 +11,13 @@ import net.snowstorm.core.utils.ReflectionHelper;
 import net.snowstorm.core.utils.UrlConnectionHelper;
 import net.snowstorm.gui.SnowstormApplication;
 import net.snowstorm.gui.TransactionLayout;
-import net.snowstorm.gui.wow.components.CharacterProfileForm;
-import net.snowstorm.gui.wow.components.CurrentAuctionsForm;
-import net.snowstorm.gui.wow.components.GuildProfileForm;
-import net.snowstorm.gui.wow.components.RealmStatusForm;
+import net.snowstorm.gui.wow.components.*;
 import net.snowstorm.wow.WowApi;
 import net.snowstorm.wow.api.auctionresources.CurrentAuctionsApi;
 import net.snowstorm.wow.api.auctionresources.CurrentAuctionsDataApi;
 import net.snowstorm.wow.api.characterresources.CharacterProfileApi;
 import net.snowstorm.wow.api.guildresources.GuildProfileApi;
+import net.snowstorm.wow.api.itemresources.ItemApi;
 import net.snowstorm.wow.api.realmresources.RealmStatusApi;
 import net.snowstorm.wow.beans.auctionresources.CurrentAuctionsData;
 import net.snowstorm.wow.beans.auctionresources.File;
@@ -53,6 +51,7 @@ public class WowLayout extends VerticalLayout {
     public static final String CHARACTER_PROFILE_API_CAPTION = "Character Profile";
     public static final String CURRENT_AUCTIONS_API_CAPTION = "Current Auctions";
     public static final String GUILD_PROFILE_API_CAPTION = "Guild Profile";
+    public static final String ITEM_API_CAPTION = "Item";
     public static final String REALM_STATUS_API_CAPTION = "Realm Status";
 
 
@@ -67,6 +66,7 @@ public class WowLayout extends VerticalLayout {
     private Button characterProfileButton;
     private Button currentAuctionsDataButton;
     private Button guildProfileButton;
+    private Button itemButton;
     private Button realmStatusButton;
 
 
@@ -100,16 +100,19 @@ public class WowLayout extends VerticalLayout {
         characterProfileButton.setEnabled(false);
         currentAuctionsDataButton = new Button(CURRENT_AUCTIONS_API_CAPTION, apiSelectButtonClickListener);
         guildProfileButton = new Button(GUILD_PROFILE_API_CAPTION, apiSelectButtonClickListener);
+        itemButton = new Button(ITEM_API_CAPTION, apiSelectButtonClickListener);
         realmStatusButton = new Button(REALM_STATUS_API_CAPTION, apiSelectButtonClickListener);
         apiButtonSelectLayout.addComponent(characterProfileButton);
         apiButtonSelectLayout.addComponent(currentAuctionsDataButton);
         apiButtonSelectLayout.addComponent(guildProfileButton);
+        apiButtonSelectLayout.addComponent(itemButton);
         apiButtonSelectLayout.addComponent(realmStatusButton);
 
         // add all the api selection buttons to a list
         apiSelectionButtons.add(characterProfileButton);
         apiSelectionButtons.add(currentAuctionsDataButton);
         apiSelectionButtons.add(guildProfileButton);
+        apiSelectionButtons.add(itemButton);
         apiSelectionButtons.add(realmStatusButton);
 
         apiSwitcher(CHARACTER_PROFILE_API_CAPTION);
@@ -251,6 +254,10 @@ public class WowLayout extends VerticalLayout {
             BeanItem<GuildProfileApi> guildProfileBeanItem = new BeanItem<GuildProfileApi>((GuildProfileApi)
                     wowApi);
             form = new GuildProfileForm(guildProfileBeanItem);
+        } else if (ITEM_API_CAPTION.equals(apiCaption)){
+            wowApi = new ItemApi();
+            BeanItem<ItemApi> itemBeanItem = new BeanItem<ItemApi>((ItemApi)wowApi);
+            form = new ItemForm(itemBeanItem);
         } else if (REALM_STATUS_API_CAPTION.equals(apiCaption)){
             wowApi = new RealmStatusApi();
             BeanItem<RealmStatusApi> realmStatusBeanItem = new BeanItem<RealmStatusApi>((RealmStatusApi)wowApi);

@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class CharacterProfileApi extends AbstractWowApi implements Serializable {
 
-
+    private UUID uuid = UUID.fromString("46fc7341-fb6c-4413-b07c-c0272aafe4cf");
 
     private static transient String apiPath = "/character";
 
@@ -29,8 +29,6 @@ public class CharacterProfileApi extends AbstractWowApi implements Serializable 
     private String characterName;
     
     private Collection<CharacterProfileField> characterProfileFields;
-
-    private UUID uuid = UUID.fromString("46fc7341-fb6c-4413-b07c-c0272aafe4cf");
     
     public CharacterProfileApi(){
         
