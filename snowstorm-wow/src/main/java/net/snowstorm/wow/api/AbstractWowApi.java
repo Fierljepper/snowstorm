@@ -32,7 +32,7 @@ public abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowA
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractWowApi.class);
 
-    private static transient String wowPath = "/wow";
+    private static final transient String WOW_PATH = "/wow";
 
     UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
 
@@ -46,12 +46,9 @@ public abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowA
         super(region);
     }
 
+    @Override
     public String getWowPath() {
-        return wowPath;
-    }
-
-    public void setWowPath(String wowPath) {
-        this.wowPath = wowPath;
+        return WOW_PATH;
     }
     
     @Override

@@ -17,8 +17,10 @@ import java.net.MalformedURLException;
 public interface WowApi extends BattlenetApiUrl {
 
     public String getUrl();
-    
+    // TODO probably move to BattlenetApiUrl
     public String getApiPath();
+
+    public String getWowPath();
 
     public String getJsonPayload(String url) throws MalformedURLException;
 

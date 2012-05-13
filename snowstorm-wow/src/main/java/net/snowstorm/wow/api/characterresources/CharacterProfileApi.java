@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -20,7 +21,7 @@ public class CharacterProfileApi extends AbstractWowApi implements Serializable 
 
     private UUID uuid = UUID.fromString("46fc7341-fb6c-4413-b07c-c0272aafe4cf");
 
-    private static transient String apiPath = "/character";
+    private static final transient String API_PATH = "/character";
 
     private static transient String fieldsParameter = "?fields=";
 
@@ -28,7 +29,7 @@ public class CharacterProfileApi extends AbstractWowApi implements Serializable 
 
     private String characterName;
     
-    private Collection<CharacterProfileField> characterProfileFields;
+    private Collection<CharacterProfileField> characterProfileFields = new HashSet<CharacterProfileField>();
     
     public CharacterProfileApi(){
         
@@ -64,13 +65,17 @@ public class CharacterProfileApi extends AbstractWowApi implements Serializable 
         return characterProfileFields;
     }
 
+    public void setCharacterProfileField(CharacterProfileField characterProfileField) {
+        this.characterProfileFields.add(characterProfileField);
+    }
+
     public void setCharacterProfileFields(Collection<CharacterProfileField> characterProfileFields) {
         this.characterProfileFields = characterProfileFields;
     }
 
     @Override
     public String getApiPath() {
-        return this.apiPath;
+        return API_PATH;
     }
 
     @Override

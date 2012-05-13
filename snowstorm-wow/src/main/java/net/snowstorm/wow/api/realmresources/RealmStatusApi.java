@@ -20,13 +20,13 @@ import java.util.UUID;
  */
 public class RealmStatusApi extends AbstractWowApi implements Serializable {
 
-    private String apiPath = "/realm/status";
+    private UUID uuid = UUID.fromString("a48adaaf-a360-4bb7-952c-69aba971efe7");
+
+    private static final transient String API_PATH = "/realm/status";
 
     private String realmsParameter = "?realms=";
 
     private Collection<Realm> realms;
-
-    private UUID uuid = UUID.fromString("a48adaaf-a360-4bb7-952c-69aba971efe7");
 
     public RealmStatusApi(){
 
@@ -64,7 +64,7 @@ public class RealmStatusApi extends AbstractWowApi implements Serializable {
 
     @Override
     public String getApiPath() {
-        return apiPath;
+        return API_PATH;
     }
 
     @Override

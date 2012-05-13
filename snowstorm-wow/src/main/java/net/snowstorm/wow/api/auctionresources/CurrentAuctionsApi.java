@@ -18,7 +18,7 @@ public class CurrentAuctionsApi extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("6426953f-01fc-41c7-9f80-02c3c8c4bf19");
 
-    private static transient String apiPath = "/auction/data";
+    private static final transient String API_PATH = "/auction/data";
 
     private Realm realm;
 
@@ -45,7 +45,7 @@ public class CurrentAuctionsApi extends AbstractWowApi implements Serializable {
 
     @Override
     public String getApiPath() {
-        return this.apiPath;
+        return API_PATH;
     }
 
     @Override

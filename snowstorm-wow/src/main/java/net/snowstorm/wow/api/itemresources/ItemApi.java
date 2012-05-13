@@ -17,7 +17,7 @@ public class ItemApi  extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("6d65b948-fc00-40c6-91a4-93d6b74af8d7");
 
-    private static transient String apiPath = "/item";
+    private static final transient String API_PATH = "/item";
 
     private int itemId;
 
@@ -48,7 +48,7 @@ public class ItemApi  extends AbstractWowApi implements Serializable {
 
     @Override
     public String getApiPath() {
-        return this.apiPath;
+        return API_PATH;
     }
 
     @Override

@@ -19,8 +19,6 @@ public interface BattlenetApiUrl {
 
     public void setRegion(BattlenetRegion region);
 
-    public String getDomain();
-
     public String getLocale();
 
     public void setLocale(String locale);

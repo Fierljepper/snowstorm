@@ -46,11 +46,6 @@ public class BattlenetApiUrlImpl implements BattlenetApiUrl, Serializable {
     }
 
     @Override
-    public String getDomain() {
-        return host;
-    }
-
-    @Override
     public String getLocale() {
         return "/" + locale;
     }

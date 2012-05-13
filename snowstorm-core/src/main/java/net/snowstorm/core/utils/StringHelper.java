@@ -3,9 +3,6 @@ package net.snowstorm.core.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 /**
  * Created by IntelliJ IDEA. User: developer Date: 2/18/12 Time: 6:54 PM To change this template use File | Settings |
  * File Templates.
@@ -21,14 +18,26 @@ public class StringHelper {
     }
 
     public static String urlEncodeString(String unencodedString){
-        try {
-            if (unencodedString != null){
-                return URLEncoder.encode(unencodedString, "UTF-8");
+        StringBuilder resultStr = new StringBuilder();
+        for (char ch : unencodedString.toCharArray()) {
+            if (isUnsafe(ch)) {
+                resultStr.append('%');
+                resultStr.append(toHex(ch / 16));
+                resultStr.append(toHex(ch % 16));
+            } else {
+                resultStr.append(ch);
             }
-        } catch (UnsupportedEncodingException e) {
-            LOG.error("Character encoding is set to UTF-8, this exception should not be thrown.",
-                    e);
         }
-        return null;
+        return resultStr.toString();
+    }
+
+    private static char toHex(int ch) {
+        return (char) (ch < 10 ? '0' + ch : 'A' + ch - 10);
+    }
+
+    private static boolean isUnsafe(char ch) {
+        if (ch > 128 || ch < 0)
+            return true;
+        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
     }
 }

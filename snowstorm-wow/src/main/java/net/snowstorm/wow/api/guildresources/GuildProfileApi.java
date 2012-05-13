@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -20,7 +21,7 @@ public class GuildProfileApi extends AbstractWowApi implements Serializable {
 
     private UUID uuid = UUID.fromString("96746417-2a98-4757-b2a4-264c56d15ab4");
 
-    private static transient String apiPath = "/guild";
+    private static final transient String API_PATH = "/guild";
 
     private static transient String fieldsParameter = "?fields=";
 
@@ -28,7 +29,7 @@ public class GuildProfileApi extends AbstractWowApi implements Serializable {
     
     private String guildName;
 
-    private Collection<GuildProfileField> guildProfileFields;
+    private Collection<GuildProfileField> guildProfileFields = new HashSet<GuildProfileField>();
 
 
     public GuildProfileApi(){
@@ -70,6 +71,10 @@ public class GuildProfileApi extends AbstractWowApi implements Serializable {
         return guildProfileFields;
     }
 
+    public void setGuildProfileField(final GuildProfileField guildProfileField) {
+        this.guildProfileFields.add(guildProfileField);
+    }
+
     public void setGuildProfileFields(final Collection<GuildProfileField> guildProfileFields) {
         this.guildProfileFields = guildProfileFields;
     }
@@ -92,7 +97,7 @@ public class GuildProfileApi extends AbstractWowApi implements Serializable {
 
     @Override
     public String getApiPath() {
-        return this.apiPath;
+        return API_PATH;
     }
 
     @Override
