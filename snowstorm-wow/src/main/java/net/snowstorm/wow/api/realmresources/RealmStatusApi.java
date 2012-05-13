@@ -51,7 +51,6 @@ public class RealmStatusApi extends AbstractWowApi implements Serializable {
     @Override
     public String getUrl() {
         String realmsParameter = "";
-        // FIXME Not the most efficient
         if (realms != null && realms.size() > 0){
             realmsParameter = this.realmsParameter;
             for (Realm realm:realms){

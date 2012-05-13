@@ -13,13 +13,13 @@ public class Socket extends WowBean implements Serializable {
 
     private UUID uuid = UUID.fromString("8bfa441e-0f8c-4815-97f1-74d7ae8f1722");
 
-    private String[] type;
+    private String type;
 
-    public String[] getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(final String[] type) {
+    public void setType(final String type) {
         this.type = type;
     }
 }

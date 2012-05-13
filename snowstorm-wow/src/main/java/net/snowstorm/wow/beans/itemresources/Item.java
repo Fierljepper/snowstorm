@@ -32,7 +32,7 @@ public class Item extends WowBean implements Serializable {
     private int inventoryType;
     private boolean equippable;
     private int itemLevel;
-    private int itemSet;
+    private ItemSet itemSet;
     private int maxCount;
     private int maxDurability;
     private int minFactionId;
@@ -195,11 +195,11 @@ public class Item extends WowBean implements Serializable {
         this.itemLevel = itemLevel;
     }
 
-    public int getItemSet() {
+    public ItemSet getItemSet() {
         return itemSet;
     }
 
-    public void setItemSet(final int itemSet) {
+    public void setItemSet(final ItemSet itemSet) {
         this.itemSet = itemSet;
     }
 

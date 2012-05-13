@@ -20,6 +20,7 @@ public class TooltipParams extends WowBean implements Serializable {
     private int gem3 = -1;
     private int[] set;
     private int reforge = -1;
+    private int transmogItem;
 
     public int getEnchant() {
         return enchant;
@@ -75,5 +76,13 @@ public class TooltipParams extends WowBean implements Serializable {
 
     public void setReforge(final int reforge) {
         this.reforge = reforge;
+    }
+
+    public int getTransmogItem() {
+        return transmogItem;
+    }
+
+    public void setTransmogItem(final int transmogItem) {
+        this.transmogItem = transmogItem;
     }
 }

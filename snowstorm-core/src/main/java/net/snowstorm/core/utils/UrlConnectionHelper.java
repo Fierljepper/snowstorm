@@ -7,16 +7,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA. User: developer Date: 4/17/12 Time: 9:37 PM To change this template use File | Settings |
  * File Templates.
  */
-public class UrlConnectionHelper {
+public class UrlConnectionHelper implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UrlConnectionHelper.class);
+
+    private UUID uuid = UUID.fromString("1c1262ea-74e1-4cb0-b1a6-13734f6336c9");
 
     private UrlConnectionReader urlConnectionReader;
 

@@ -1,12 +1,8 @@
 package net.snowstorm.gui.wow;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
-import net.snowstorm.core.url.BattlenetApiUrlImpl;
 import net.snowstorm.core.url.BattlenetRegion;
-import net.snowstorm.core.url.UrlConnectionReader;
 import net.snowstorm.core.utils.ReflectionHelper;
 import net.snowstorm.core.utils.UrlConnectionHelper;
 import net.snowstorm.gui.SnowstormApplication;
@@ -22,15 +18,11 @@ import net.snowstorm.wow.api.realmresources.RealmStatusApi;
 import net.snowstorm.wow.beans.auctionresources.CurrentAuctionsData;
 import net.snowstorm.wow.beans.auctionresources.File;
 import net.snowstorm.wow.beans.realmresources.Realm;
+import net.snowstorm.wow.beans.realmresources.RealmStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -194,38 +186,27 @@ public class WowLayout extends VerticalLayout {
         return transactionLayout;
     }
 
+
     private static void fillRegionRealmsMap(){
-        BattlenetApiUrlImpl battlenetApiImpl = new RealmStatusApi();
-        UrlConnectionReader urlConnectionReader = new UrlConnectionReader();
-        for(BattlenetRegion region: regionValues){
-            List<Realm> realmsList = new ArrayList<Realm>();
-            battlenetApiImpl.setRegion(region);
-            InputStream inputStream = null;
-            try {
-                inputStream = urlConnectionReader.fetch(new URL(battlenetApiImpl.getUrl()));
-                if (inputStream != null){
-                    JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-                    Gson gson = new Gson();
-                    net.snowstorm.wow.beans.realmresources.RealmStatus realmStatus = gson.fromJson(reader, net.snowstorm.wow.beans.realmresources.RealmStatus.class);
-                    for(Realm realm: realmStatus.getRealms()){
-                        realmsList.add(realm);
-                    }
-                    regionRealmsMap.put(region, realmsList);
-                }
-            } catch (MalformedURLException e) {
-                LOG.error("Malformed URL", e);
-            } catch (IOException e) {
-                LOG.error("Failed to convert InputStream to String", e);
-            } finally {
-                urlConnectionReader.disconnect();
-                try {
-                    if (inputStream != null){
-                        inputStream.close();
-                    }
-                } catch (IOException e) {
-                    LOG.error("Unable to close InputStream", e);
-                }
+        RealmStatusApi realmStatusApi = new RealmStatusApi();
+        byte[] realmsByteArray;
+        List<Realm> realmsList;
+        final UrlConnectionHelper urlConnectionHelper = new UrlConnectionHelper();
+        for(BattlenetRegion region: BattlenetRegion.values()){
+
+            realmsList = new ArrayList<Realm>();
+            realmStatusApi.setRegion(region);
+
+            realmsByteArray = urlConnectionHelper.urlPayloadToByteArray(realmStatusApi.getUrl());
+
+            RealmStatus realmStatus = realmStatusApi.getBeanPayload(new ByteArrayInputStream(realmsByteArray));
+
+            for(Realm realm: realmStatus.getRealms()){
+                realmsList.add(realm);
             }
+            regionRealmsMap.put(region, realmsList);
+
+
         }
     }
 
