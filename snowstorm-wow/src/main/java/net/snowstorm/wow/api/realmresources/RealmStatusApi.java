@@ -69,12 +69,12 @@ public class RealmStatusApi extends AbstractWowApi implements Serializable {
 
     @Override
     public RealmStatus getBeanPayload(String url) throws MalformedURLException {
-        return (RealmStatus) getBeanPayload(url, RealmStatus.class);
+        return getBeanPayload(url, RealmStatus.class);
     }
 
     @Override
     public RealmStatus getBeanPayload(final InputStream inputStream) {
-        return (RealmStatus) getBeanPayload(inputStream, RealmStatus.class);
+        return getBeanPayload(inputStream, RealmStatus.class);
     }
 
 }

@@ -55,11 +55,11 @@ public class CurrentAuctionsApi extends AbstractWowApi implements Serializable {
 
     @Override
     public CurrentAuctions getBeanPayload(final String url) throws MalformedURLException {
-        return (CurrentAuctions) getBeanPayload(url, CurrentAuctions.class);
+        return getBeanPayload(url, CurrentAuctions.class);
     }
 
     @Override
     public CurrentAuctions getBeanPayload(final InputStream inputStream) {
-        return (CurrentAuctions) getBeanPayload(inputStream, CurrentAuctions.class);
+        return getBeanPayload(inputStream, CurrentAuctions.class);
     }
 }

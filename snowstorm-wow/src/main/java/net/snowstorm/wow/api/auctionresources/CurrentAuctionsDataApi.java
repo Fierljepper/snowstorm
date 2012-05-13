@@ -49,11 +49,11 @@ public class CurrentAuctionsDataApi extends AbstractWowApi implements Serializab
 
     @Override
     public CurrentAuctionsData getBeanPayload(final String url) throws MalformedURLException {
-        return (CurrentAuctionsData) getBeanPayload(url, CurrentAuctionsData.class);
+        return getBeanPayload(url, CurrentAuctionsData.class);
     }
 
     @Override
     public CurrentAuctionsData getBeanPayload(final InputStream inputStream) {
-        return (CurrentAuctionsData) getBeanPayload(inputStream, CurrentAuctionsData.class);
+        return getBeanPayload(inputStream, CurrentAuctionsData.class);
     }
 }

@@ -22,9 +22,13 @@ public interface WowApi extends BattlenetApiUrl {
 
     public String getJsonPayload(String url) throws MalformedURLException;
 
-    public WowBean getBeanPayload(String url) throws MalformedURLException ;
-
     public String getJsonPayload(InputStream inputStream);
+
+    public <T extends WowBean> T getBeanPayload(String url, Class<T> type) throws MalformedURLException ;
+
+    public <T extends WowBean> T getBeanPayload(InputStream inputStream, Class<T> type);
+
+    public WowBean getBeanPayload(String url) throws MalformedURLException ;
 
     public WowBean getBeanPayload(InputStream inputStream);
 

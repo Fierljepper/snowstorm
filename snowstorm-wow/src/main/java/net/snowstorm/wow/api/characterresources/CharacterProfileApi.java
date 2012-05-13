@@ -93,12 +93,12 @@ public class CharacterProfileApi extends AbstractWowApi implements Serializable 
 
     @Override
     public CharacterProfile getBeanPayload(String url) throws MalformedURLException {
-        return (CharacterProfile) getBeanPayload(url, CharacterProfile.class);
+        return getBeanPayload(url, CharacterProfile.class);
     }
 
     @Override
     public CharacterProfile getBeanPayload(final InputStream inputStream) {
-        return (CharacterProfile) getBeanPayload(inputStream, CharacterProfile.class);
+        return getBeanPayload(inputStream, CharacterProfile.class);
     }
 
     public enum CharacterProfileField {

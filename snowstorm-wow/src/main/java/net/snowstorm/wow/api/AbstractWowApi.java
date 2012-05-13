@@ -87,12 +87,13 @@ public abstract class AbstractWowApi extends BattlenetApiUrlImpl implements WowA
     }
 
     // Convenience method
-    public WowBean getBeanPayload(String url, Class type) throws MalformedURLException {
+    @Override
+    public <T extends WowBean> T getBeanPayload(String url, Class<T> type) throws MalformedURLException {
         InputStream inputStream = urlConnectionReader.fetch(new URL(url));
         return getBeanPayload(inputStream, type);
     }
-
-    public WowBean getBeanPayload(InputStream inputStream, Class type){
+    @Override
+    public <T extends WowBean> T getBeanPayload(InputStream inputStream, Class<T> type){
         if (inputStream != null){
             JsonReader reader = getJsonReader(inputStream, "UTF-8");
             Gson gson = new Gson();

@@ -97,12 +97,12 @@ public class GuildProfileApi extends AbstractWowApi implements Serializable {
 
     @Override
     public GuildProfile getBeanPayload(final String url) throws MalformedURLException {
-        return  (GuildProfile)getBeanPayload(url, GuildProfile.class);
+        return getBeanPayload(url, GuildProfile.class);
     }
 
     @Override
     public GuildProfile getBeanPayload(final InputStream inputStream) {
-        return  (GuildProfile)getBeanPayload(inputStream, GuildProfile.class);
+        return getBeanPayload(inputStream, GuildProfile.class);
     }
 
     public enum GuildProfileField{

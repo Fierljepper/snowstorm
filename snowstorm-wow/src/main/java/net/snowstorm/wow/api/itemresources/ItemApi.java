@@ -53,11 +53,11 @@ public class ItemApi  extends AbstractWowApi implements Serializable {
 
     @Override
     public Item getBeanPayload(final String url) throws MalformedURLException {
-        return (Item) getBeanPayload(url, Item.class);
+        return getBeanPayload(url, Item.class);
     }
 
     @Override
     public Item getBeanPayload(final InputStream inputStream) {
-        return (Item) getBeanPayload(inputStream, Item.class);
+        return getBeanPayload(inputStream, Item.class);
     }
 }
